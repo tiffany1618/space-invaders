@@ -39,18 +39,15 @@ module clk_divider(
 		if (rst) begin
 			clk_out <= 0;
 			counter <= 27'b0;
-			max <= 100_000_000 / freq;
+			max <= 100_000_000 / freq - 1;
 		end
 		else begin
-			if (clk_out)
-				clk_out <= ~clk_out;
+			clk_out <= (counter == max);
 			
-			if (counter == max) begin
+			if (clk_out)
 				counter <= 1;
-				clk_out <= 1;
-			end
 			else
-				counter <= counter + 1;
+				counter <= counter + 1;			
 		end
 	end
 	 

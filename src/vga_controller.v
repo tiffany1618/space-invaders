@@ -24,7 +24,7 @@ module vga_controller(
 	rst,
 	
 	// Outputs
-	vga_color,
+	vga_color, // RRRGGGBB
 	hsync,
 	vsync
 	);
@@ -33,9 +33,10 @@ module vga_controller(
 	
 	input clk, rst;
 	output wire hsync, vsync;
-	output wire [7:0] vga_color;
+	output reg [7:0] vga_color;
 	
 	wire clk_pixel;
+	wire update;
 	
 	clk_divider _clk_pixel (
 		.clk,
@@ -49,7 +50,13 @@ module vga_controller(
 		.rst,
 		.clk_pixel,
 		.hsync,
-		.vsync
+		.vsync,
+		.update
 	);
+	
+	always @(posedge clk_pixel) begin
+		// Hopefully a blue screen
+		vga_color <= 8'b00000011;
+	end
 	
 endmodule

@@ -69,15 +69,8 @@ module debouncer(
 			else if (step_left == 3'b001)
 				left <= 0;
 			 
-			if (shoot)
-				shoot <= ~shoot;
-			else if (step_shoot == 3'b110)
-				shoot <= 1;
-			
-			if (arst)
-				arst <= ~arst;
-			else if (step_arst == 3'b110)
-				arst <= 1;
+			shoot <= (step_shoot == 3'b110);
+			arst <= (step_arst == 3'b110);
 		end
 	end		
 
