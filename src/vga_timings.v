@@ -44,12 +44,12 @@ module vga_timings(
 		end
 		else if (clk_pixel) begin
 			if (counter_h > MAX_H)
-				counter_h <= 10'b0;
+				counter_h <= 1;
 			else
 				counter_h <= counter_h + 1;
 				
 			if (counter_v > MAX_V)
-				counter_v <= 10'b0;
+				counter_v <= 1;
 			else
 				counter_v <= counter_v + 1;
 				

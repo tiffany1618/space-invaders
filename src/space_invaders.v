@@ -100,11 +100,11 @@ module space_invaders(
 	);
 	
 	vga_controller _vga_controller (
-		.clk(clk),
-		.rst(rst),
-		.vga_color(vga_color),
-		.vsync(vsync),
-		.hsync(hsync)
+		.clk,
+		.rst,
+		.vga_color,
+		.vsync,
+		.hsync
 	);
 
 endmodule
