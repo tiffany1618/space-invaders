@@ -56,8 +56,8 @@ module space_invaders(
 	
 	clk_divider _clk_200Hz (
 		// Inputs
-		.clk(clk),
-		.rst(rst),
+		.clk,
+		.rst,
 		.freq(200),
 		
 		// Outputs
@@ -65,55 +65,43 @@ module space_invaders(
 	);
 	
 	debouncer _debouncer (
-		// Inputs
-		.clk(clk),
+		.clk,
 		.clk_debouncer(clk_200Hz),
-		.rst(rst),
-		.btn_shoot(btn_shoot),
-		.btn_left(btn_left),
-		.btn_right(btn_right),
-		.btn_rst(btn_rst),
-		
-		// Outputs
-		.shoot(shoot),
-		.left(left),
-		.right(right),
-		.arst(arst)
+		.rst,
+		.btn_shoot,
+		.btn_left,
+		.btn_right,
+		.btn_rst,
+		.shoot,
+		.left,
+		.right,
+		.arst
 	);
 	
 	segment_displays _segment_displays (
-		// Inputs
-		.clk(clk),
+		.clk,
 		.clk_display(clk_200Hz),
-		.arst(arst),
-		.lives(lives),
-		.score(score),
-		
-		// Outputs
-		.an_lives(an_lives),
-		.seg_lives(seg_lives),
-		.an_score(an_score),
-		.seg_score(seg_score)
+		.arst,
+		.lives,
+		.score,
+		.an_lives,
+		.seg_lives,
+		.an_score,
+		.seg_score
 	);
 	
 	score_logic _score_logic (
-		// Inputs
-		.clk(clk),
-		.arst(arst),
-		.invader_collision(invader_collision),
-		.player_collision(player_collision),
-		
-		// Outputs
-		.lives(lives),
-		.score(score)
+		.clk,
+		.arst,
+		.invader_collision,
+		.player_collision,
+		.lives,
+		.score
 	);
 	
 	vga_controller _vga_controller (
-		// Inputs
 		.clk(clk),
 		.rst(rst),
-		
-		// Outputs
 		.vga_color(vga_color),
 		.vsync(vsync),
 		.hsync(hsync)

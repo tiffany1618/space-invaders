@@ -38,24 +38,18 @@ module vga_controller(
 	wire clk_pixel;
 	
 	clk_divider _clk_pixel (
-		// Inputs
-		.clk(clk),
-		.rst(rst),
+		.clk,
+		.rst,
 		.freq(PIXEL_FREQ),
-		
-		// Outputs
 		.clk_out(clk_pixel)
 	);
 	
 	vga_timings _vga_timings (
-		// Inputs
-		.clk(clk),
-		.rst(rst),
-		.clk_pixel(clk_pixel),
-		
-		// Outputs
-		.hsync(hsync),
-		.vsync(vsync)
+		.clk,
+		.rst,
+		.clk_pixel,
+		.hsync,
+		.vsync
 	);
 	
 endmodule
