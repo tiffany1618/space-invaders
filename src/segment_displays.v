@@ -34,7 +34,7 @@ module segment_displays(
    );
 	 
 	input clk, clk_display, arst;
-	input [3:0] lives;
+	input [1:0] lives;
 	input [6:0] score;
 	
 	output reg an_lives, an_score;

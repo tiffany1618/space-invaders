@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    12:15:27 11/15/2021 
+// Create Date:    14:53:23 11/15/2021 
 // Design Name: 
-// Module Name:    clk_divider 
+// Module Name:    score_logic 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,40 +18,36 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module clk_divider(
+module score_logic(
 	// Inputs
-	clk, // 100 MHz
-	rst,
-	freq, // Hz
+	clk,
+	arst,
+	invader_collision,
+	player_collision,
 	
 	// Outputs
-	clk_out
+	lives,
+	score
 	);
 	
-	input clk, rst;
-	input [26:0] freq;
-	output reg clk_out;
-	
-   reg [26:0] counter;
-   reg [26:0] max;
-    
+	`include "constants.v"
+		
+	input clk, arst, invader_collision, player_collision;
+	output reg [1:0] lives;
+	output reg [6:0] score;
+
 	always @(posedge clk) begin
-		if (rst) begin
-			clk_out <= 0;
-			counter <= 27'b0;
-			max <= 100_000_000 / freq;
+		if (arst) begin
+			lives <= PLAYER_LIVES;
+			score <= 7'b0;
 		end
 		else begin
-			if (clk_out)
-				clk_out <= ~clk_out;
+			if (invader_collision && score < 99)
+				score <= score + 1;
 			
-			if (counter == max) begin
-				counter <= 1;
-				clk_out <= 1;
-			end
-			else
-				counter <= counter + 1;
+			if (player_collision && lives > 0)
+				lives <= lives - 1;
 		end
 	end
-	 
+
 endmodule

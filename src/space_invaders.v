@@ -31,7 +31,10 @@ module space_invaders(
 	an_lives,
 	seg_lives,
 	an_score,
-	seg_score
+	seg_score,
+	vga_color,
+	hsync,
+	vsync
 	);
 	
 	`include "constants.v"
@@ -39,11 +42,17 @@ module space_invaders(
 	input clk, rst, btn_right, btn_left, btn_shoot, btn_rst;
 	output wire an_lives, an_score;
 	output wire [6:0] seg_lives, seg_score;
+	output wire hsync, vsync;
+	output wire [7:0] vga_color;
 	
+	// Clocks
 	wire clk_200Hz;
+	
+	// Game values
 	wire shoot, left, right, arst;
-	wire [3:0] lives;
-	wire [6:0] score;
+	wire invader_collision, player_collision;
+	wire [1:0] lives;
+	wire [6:0] score;	
 	
 	clk_divider _clk_200Hz (
 		// Inputs
@@ -85,6 +94,29 @@ module space_invaders(
 		.seg_lives(seg_lives),
 		.an_score(an_score),
 		.seg_score(seg_score)
+	);
+	
+	score_logic _score_logic (
+		// Inputs
+		.clk(clk),
+		.arst(arst),
+		.invader_collision(invader_collision),
+		.player_collision(player_collision),
+		
+		// Outputs
+		.lives(lives),
+		.score(score)
+	);
+	
+	vga_controller _vga_controller (
+		// Inputs
+		.clk(clk),
+		.rst(rst),
+		
+		// Outputs
+		.vga_color(vga_color),
+		.vsync(vsync),
+		.hsync(hsync)
 	);
 
 endmodule
