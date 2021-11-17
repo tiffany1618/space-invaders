@@ -52,7 +52,7 @@ module space_invaders(
 	wire shoot, left, right, arst;
 	wire invader_collision, player_collision;
 	wire [1:0] lives;
-	wire [6:0] score;	
+	wire [6:0] score;
 	
 	clk_divider _clk_200Hz (
 		// Inputs
@@ -102,7 +102,8 @@ module space_invaders(
 	vga_controller _vga_controller (
 		.clk,
 		.rst,
-		.vga_color,
+		.arst,
+		.vga_out(vga_color),
 		.vsync,
 		.hsync
 	);

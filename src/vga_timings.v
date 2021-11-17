@@ -27,16 +27,21 @@ module vga_timings(
 	// Outputs
 	hsync,
 	vsync,
+	data_enable,
 	update
 	);
 	
 	`include "constants.v"
 	
 	input clk, rst, clk_pixel;
-	output reg hsync, vsync, update;
+	output wire hsync, vsync, data_enable, update;
 	
 	reg [9:0] counter_h, counter_v;
 	
+	assign hsync = ~(counter_h >= SYNC_START_H && counter_h < SYNC_END_H);
+	assign vsync = ~(counter_v >= SYNC_START_V && counter_v < SYNC_END_V);
+	assign data_enable = (counter_h < DISPLAY_H && counter_v < DISPLAY_V);
+	assign update = (counter_h == 0 && counter_v == DISPLAY_V);
 	
 	always @(posedge clk) begin
 		if (rst) begin
@@ -54,10 +59,6 @@ module vga_timings(
 			end
 			else
 				counter_h <= counter_h + 1;
-	
-			hsync <= (counter_h >= SYNC_START_H && counter_h < SYNC_END_H);
-			vsync <= (counter_v >= SYNC_START_V && counter_v < SYNC_END_V);
-			update <= (counter_h == 0 && counter_v == DISPLAY_V);
 		end
 	end
 endmodule
