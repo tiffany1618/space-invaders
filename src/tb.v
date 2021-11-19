@@ -6,7 +6,7 @@
 //
 // Create Date:   21:57:20 11/15/2021
 // Design Name:   space_invaders
-// Module Name:   /home/tiffany/Documents/School/21-22/CS M152A/space-invaders/src/tb.v
+// Module Name:   tb
 // Project Name:  space_invaders
 // Target Device:  
 // Tool versions:  

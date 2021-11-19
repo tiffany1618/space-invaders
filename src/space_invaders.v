@@ -37,7 +37,7 @@ module space_invaders(
 	vsync
 	);
 	
-	`include "constants.v"
+	`include "util/constants.v"
 
 	input clk, rst, btn_right, btn_left, btn_shoot, btn_rst;
 	output wire an_lives, an_score;
