@@ -54,8 +54,8 @@ module draw_sprite(
 	
 	initial begin
 		case (sprite)
-			PLAYER: $readmemb("player.mem", memory);
-			INVADER1: $readmemb("invader1.mem", memory);
+			PLAYER: $readmemb(PLAYER_FILE, memory);
+			INVADER1: $readmemb(INVADER1_FILE, memory);
 		endcase
 	end
 	

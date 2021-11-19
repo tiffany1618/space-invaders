@@ -63,5 +63,5 @@ parameter INVADERS_START_Y = RES_V - SPRITE_HEIGHT_SCALED - INVADERS_HEIGHT_TOT
 										- (INVADERS_LINE_HEIGHT * INVADERS_LINE_DISP);
 
 // Mem files
-parameter PLAYER_FILE = "player.mem";
-parameter INVADER1_FILE = "invader1.mem";
+parameter PLAYER_FILE = "player.txt";
+parameter INVADER1_FILE = "invader1.txt";
