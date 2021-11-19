@@ -46,6 +46,7 @@ parameter INVADER1 = 1;
 parameter PLAYER_PIXEL = GREEN;
 parameter PLAYER_START_X = (RES_H / 2) - (SPRITE_WIDTH_SCALED / 2);
 parameter PLAYER_START_Y = RES_V - (SPRITE_HEIGHT_SCALED);
+parameter PLAYER_STEP = 10;
 
 // Invader values
 parameter INVADER_PIXEL = WHITE;
