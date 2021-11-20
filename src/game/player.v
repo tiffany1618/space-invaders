@@ -37,20 +37,22 @@ module player(
 	input clk, rst, arst, frame, left, right;
 	output reg [9:0] player_x, player_y;
 	
-	reg x_temp;
+	reg [9:0] x_temp, y_temp;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			x_temp <= PLAYER_START_X;
-			player_y <= PLAYER_START_Y;
+			y_temp <= PLAYER_START_Y;
 		end
-		else if (frame)
+		else if (frame) begin
 			player_x <= x_temp;
+			player_y <= y_temp;
+		end
 		else begin
-			if (left && ~right)
+			if (left && ~right && x_temp >= 0)
 				x_temp <= x_temp - PLAYER_STEP;
 			
-			if (right && ~left)
+			if (right && ~left && x_temp <= (RES_H - SPRITE_WIDTH_SCALED))
 				x_temp <= x_temp + PLAYER_STEP;
 		end
 	end

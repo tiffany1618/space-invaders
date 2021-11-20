@@ -48,15 +48,21 @@ module space_invaders(
 	// Clocks
 	wire clk_200Hz;
 	
-	// Game values
+	// Game
 	wire shoot, left, right, arst;
 	wire invader_collision, player_collision;
 	wire [1:0] lives;
 	wire [6:0] score;
 	
-	// Sprite values
+	// VGA
 	wire frame;
+	
+	// Sprites
 	wire [9:0] player_x, player_y;
+	
+	// Projectiles
+	wire laser_active;
+	wire [9:0] laser_x, laser_y;
 	
 	clk_divider _clk_200Hz (
 		// Inputs
@@ -112,6 +118,19 @@ module space_invaders(
 		.right,
 		.player_x,
 		.player_y
+	);
+	
+	laser _laser (
+		.clk,
+		.rst,
+		.arst,
+		.frame,
+		.shoot,
+		.player_x,
+		.invader_collision,
+		.laser_active,
+		.laser_x,
+		.laser_y
 	);
 	
 	vga_controller _vga_controller (

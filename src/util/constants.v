@@ -63,6 +63,7 @@ parameter INVADERS_START_X = (RES_H / 2) - (INVADERS_WIDTH_TOT / 2);
 parameter INVADERS_START_Y = RES_V - SPRITE_HEIGHT_SCALED - INVADERS_HEIGHT_TOT
 										- (INVADERS_LINE_HEIGHT * INVADERS_LINE_DISP);
 
-// Bitmap files
-parameter PLAYER_FILE = "player.txt";
-parameter INVADER1_FILE = "invader1.txt";
+// Laser values
+parameter LASER_WIDTH = 3;
+parameter LASER_HEIGHT = 4;
+parameter LASER_STEP = 1;
