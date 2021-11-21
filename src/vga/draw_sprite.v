@@ -112,7 +112,7 @@ module draw_sprite(
          DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
-				else if (!(y == 7 && counter_y == SPRITE_SCALE - 1))
+				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
 					next_state = NEXT_LINE;
 				else
 					next_state = IDLE;

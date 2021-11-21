@@ -35,17 +35,8 @@ module vga_controller(
 	hsync,
 	vsync,
 	frame,
-	
-	// Simulation
-	pixel_x,
-	pixel_y,
-	data_enable,
-	sdl_b,
-	sdl_g,
-	sdl_r
-	
-	//player_collision,
-	//invader_collision
+	player_collision,
+	invader_collision
 	);
 	
 	`include "../util/constants.v"
@@ -57,14 +48,7 @@ module vga_controller(
 	
 	output wire hsync, vsync, frame;
 	output reg [7:0] vga_out;
-	
-	// Simulation
-	output reg [$clog2(RES_H)-1:0] pixel_x;
-	output reg [$clog2(RES_V):0] pixel_y;
-	output wire data_enable;
-	output reg [7:0] sdl_r, sdl_g, sdl_b;
-	
-/*	output reg player_collision;
+	output reg player_collision;
 	output reg [5:0] invader_collision;
 	
 	wire data_enable;
@@ -72,13 +56,13 @@ module vga_controller(
 	// Current x and y positions of pixel being drawn
 	reg [$clog2(RES_H)-1:0] pixel_x;
 	reg [$clog2(RES_V)-1:0] pixel_y;
-*/	
+	
 	// Sprite start signals
-	wire start_player;
+	reg start_player;
 	
 	// Sprite draw signals
 	wire player_draw;
-	wire laser_draw;
+	reg laser_draw;
 
 	// Sprite output pixels
 	reg [7:0] player_out;
@@ -102,11 +86,6 @@ module vga_controller(
 		.spr_draw(player_draw)
 	);
 	
-	// Sprite drawing signals
-	assign start_player = (pixel_x == player_x && pixel_y == player_y);
-	assign laser_draw = (laser_active && pixel_x >= laser_x && pixel_x <= laser_x + PROJ_WIDTH_SCALED 
-								&& pixel_y >= laser_y && pixel_y <= laser_y + PROJ_HEIGHT_SCALED);
-	
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			pixel_x <= 0;
@@ -126,39 +105,24 @@ module vga_controller(
 			else
 				pixel_x <= pixel_x + 1;
 				
+			// Sprite drawing signals
+			start_player <= (pixel_x == player_x && pixel_y == player_y);
+			laser_draw <= (laser_active && pixel_x >= laser_x && pixel_x <= laser_x + PROJ_WIDTH_SCALED 
+								&& pixel_y >= laser_y && pixel_y <= laser_y + PROJ_HEIGHT_SCALED);
+				
 			// Draw sprites
 			if (player_draw) begin
 				vga_out <= PLAYER_PIXEL;
-				
-				// Simulation
-				sdl_r <= 8'h00;
-				sdl_g <= 8'hFF;
-				sdl_b <= 8'h00;
 			end
 			else if (laser_draw) begin
 				vga_out <= WHITE;
-				
-				// Simulation
-				sdl_r <= 8'hFF;
-				sdl_g <= 8'hFF;
-				sdl_b <= 8'hFF;
 			end
 			else begin
 				vga_out <= 0;
-				
-				// Simulation
-				sdl_r <= 8'h00;
-				sdl_g <= 8'h00;
-				sdl_b <= 8'h00;
 			end
 		end
 		else begin
 			vga_out <= 0;
-			
-			// Simulation
-			sdl_r <= 8'h00;
-			sdl_g <= 8'h00;
-			sdl_b <= 8'h00;
 		end
 	end
 	

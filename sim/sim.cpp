@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <iostream>
 #include <SDL.h>
 #include <verilated.h>
-#include "vga_controller.h"
+#include "Vvga_controller.h"
 
 // screen dimensions
 const int H_RES = 640;
@@ -50,7 +51,7 @@ int main(int argc, char* argv[]) {
     }
 
     // initialize Verilog module
-    Vtop_square* top = new Vtop_square;
+    Vvga_controller* top = new Vvga_controller;
 
     top->rst = 1;
     top->clk = 0;
@@ -79,6 +80,7 @@ int main(int argc, char* argv[]) {
             p->b = top->sdl_b;
             p->g = top->sdl_g;
             p->r = top->sdl_r;
+            std::cout << (int) p->a << std::endl;
         }
 
         // update texture once per frame at start of blanking
