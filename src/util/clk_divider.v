@@ -30,6 +30,7 @@ module clk_divider(
 	
 	input clk, rst;
 	input [26:0] freq;
+	
 	output reg clk_out;
 	
    reg [26:0] counter;

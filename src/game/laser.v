@@ -36,8 +36,10 @@ module laser(
 	
 	`include "../util/constants.v"
 
-	input clk, rst, arst, frame, shoot, invader_collision;
+	input clk, rst, arst, frame, shoot;
 	input [9:0] player_x;
+	input [5:0] invader_collision;
+	
 	output reg laser_active;
 	output reg [9:0] laser_x, laser_y;
 	
@@ -49,8 +51,8 @@ module laser(
 		end
 		else if (shoot && ~laser_active) begin
 			laser_active <= 1;
-			x_temp <= player_x + (SPRITE_WIDTH_SCALED / 2);
-			y_temp <= PLAYER_START_Y;
+			x_temp <= player_x + (SPRITE_WIDTH_SCALED / 2) - (PROJ_WIDTH_SCALED) / 2;
+			y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
 		end
 		else if (frame && laser_active) begin
 			if (y_temp == 0 || invader_collision)

@@ -35,6 +35,7 @@ module player(
 	`include "../util/constants.v"
 
 	input clk, rst, arst, frame, left, right;
+	
 	output reg [9:0] player_x, player_y;
 	
 	reg [9:0] x_temp, y_temp;

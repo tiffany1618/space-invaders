@@ -63,7 +63,10 @@ parameter INVADERS_START_X = (RES_H / 2) - (INVADERS_WIDTH_TOT / 2);
 parameter INVADERS_START_Y = RES_V - SPRITE_HEIGHT_SCALED - INVADERS_HEIGHT_TOT
 										- (INVADERS_LINE_HEIGHT * INVADERS_LINE_DISP);
 
-// Laser values
-parameter LASER_WIDTH = 3;
-parameter LASER_HEIGHT = 4;
+// Projectile values
+parameter PROJ_WIDTH = 3;
+parameter PROJ_HEIGHT = 4;
+parameter PROJ_WIDTH_SCALED = PROJ_WIDTH * SPRITE_SCALE;
+parameter PROJ_HEIGHT_SCALED = PROJ_HEIGHT * SPRITE_SCALE;
 parameter LASER_STEP = 1;
+parameter MISSILE_STEP = 1;

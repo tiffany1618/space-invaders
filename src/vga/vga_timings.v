@@ -33,6 +33,7 @@ module vga_timings(
 	`include "../util/constants.v"
 	
 	input clk, rst;
+	
 	output reg hsync, vsync, data_enable, frame;
 	
 	reg signed [10:0] x, y;

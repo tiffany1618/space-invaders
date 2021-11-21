@@ -40,6 +40,7 @@ module space_invaders(
 	`include "util/constants.v"
 
 	input clk, rst, btn_right, btn_left, btn_shoot, btn_rst;
+	
 	output wire an_lives, an_score;
 	output wire [6:0] seg_lives, seg_score;
 	output wire hsync, vsync;
@@ -50,15 +51,17 @@ module space_invaders(
 	
 	// Game
 	wire shoot, left, right, arst;
-	wire invader_collision, player_collision;
+	wire [5:0] invader_collision;
+	wire player_collision;
 	wire [1:0] lives;
 	wire [6:0] score;
 	
 	// VGA
-	wire frame;
+	wire clk_pixel, frame;
 	
 	// Sprites
 	wire [9:0] player_x, player_y;
+	wire [9:0] invaders_x, invaders_y;
 	
 	// Projectiles
 	wire laser_active;
@@ -72,6 +75,13 @@ module space_invaders(
 		
 		// Outputs
 		.clk_out(clk_200Hz)
+	);
+			
+	clk_divider _clk_pixel (
+		.clk,
+		.rst,
+		.freq(PIXEL_FREQ),
+		.clk_out(clk_pixel)
 	);
 	
 	debouncer _debouncer (
@@ -100,49 +110,38 @@ module space_invaders(
 		.seg_score
 	);
 	
-	score_logic _score_logic (
-		.clk,
-		.arst,
-		.invader_collision,
-		.player_collision,
-		.lives,
-		.score
-	);
-	
-	player _player (
-		.clk,
-		.rst,
-		.arst,
-		.frame,
-		.left,
-		.right,
-		.player_x,
-		.player_y
-	);
-	
-	laser _laser (
-		.clk,
-		.rst,
-		.arst,
-		.frame,
-		.shoot,
-		.player_x,
-		.invader_collision,
-		.laser_active,
-		.laser_x,
-		.laser_y
-	);
-	
 	vga_controller _vga_controller (
-		.clk,
+		.clk(clk_pixel),
 		.rst,
 		.arst,
 		.player_x,
 		.player_y,
+		.laser_active,
+		.laser_x,
+		.laser_y,
 		.vga_out(vga_color),
 		.vsync,
 		.hsync,
 		.frame
+	);
+	
+	game _game (
+		.clk(clk_pixel),
+		.rst,
+		.arst,
+		.left,
+		.right,
+		.shoot,
+		.invader_collision,
+		.player_collision,
+		.frame,
+		.lives,
+		.score,
+		.player_x,
+		.player_y,
+		.laser_x,
+		.laser_y,
+		.laser_active
 	);
 
 endmodule

@@ -21,6 +21,7 @@
 module score_logic(
 	// Inputs
 	clk,
+	rst,
 	arst,
 	invader_collision,
 	player_collision,
@@ -32,12 +33,13 @@ module score_logic(
 	
 	`include "../util/constants.v"
 		
-	input clk, arst, invader_collision, player_collision;
+	input clk, rst, arst, invader_collision, player_collision;
+	
 	output reg [1:0] lives;
 	output reg [6:0] score;
 
-	always @(posedge clk) begin
-		if (arst) begin
+	always @(posedge clk or posedge rst or posedge arst) begin
+		if (rst || arst) begin
 			lives <= PLAYER_LIVES;
 			score <= 7'b0;
 		end

@@ -37,6 +37,7 @@ module draw_sprite(
 	input [2:0] sprite;
 	input [9:0] spr_x;
 	input [$clog2(RES_H)-1:0] pixel_x;
+	
 	output wire spr_draw;
 	
 	// States
@@ -50,7 +51,7 @@ module draw_sprite(
 	reg [SPRITE_WIDTH-1:0] memory [SPRITE_HEIGHT-1:0]; // Sprite data
 	reg [$clog2(SPRITE_WIDTH)-1:0] x; // Horizontal position within sprite
 	reg [$clog2(SPRITE_HEIGHT)-1:0] y; // Vertical position within sprite
-	reg [$clog2(SPRITE_SCALE)-1:0] counter_x, counter_y; // Scaling counters
+	reg [$clog2(SPRITE_SCALE):0] counter_x, counter_y; // Scaling counters
 	
 	initial begin
 		case (sprite)
@@ -59,7 +60,7 @@ module draw_sprite(
 		endcase
 	end
 	
-	assign spr_draw = (state == DRAW && memory[x][y]);
+	assign spr_draw = (state == DRAW && memory[y][x]);
 	
 	always @(posedge clk or posedge rst) begin
 		if (rst) begin
@@ -111,7 +112,7 @@ module draw_sprite(
          DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
-				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
+				else if (!(y == 7 && counter_y == SPRITE_SCALE - 1))
 					next_state = NEXT_LINE;
 				else
 					next_state = IDLE;

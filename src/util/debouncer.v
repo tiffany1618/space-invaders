@@ -36,6 +36,7 @@ module debouncer(
    );
 
 	input clk, clk_debouncer, rst, btn_shoot, btn_left, btn_right, btn_rst;
+	
 	output reg shoot, left, right, arst;
 
 	reg [2:0] step_shoot, step_left, step_right, step_arst;

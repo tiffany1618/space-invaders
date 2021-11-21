@@ -26,46 +26,65 @@ module vga_controller(
 	
 	player_x,
 	player_y,
+	laser_active,
+	laser_x,
+	laser_y,
 	
 	// Outputs
 	vga_out, // RRRGGGBB
 	hsync,
 	vsync,
-	frame
+	frame,
+	
+	// Simulation
+	pixel_x,
+	pixel_y,
+	data_enable,
+	sdl_b,
+	sdl_g,
+	sdl_r
+	
+	//player_collision,
+	//invader_collision
 	);
 	
 	`include "../util/constants.v"
 	
 	input clk, rst, arst;
 	input [9:0] player_x, player_y;
+	input laser_active;
+	input [9:0] laser_x, laser_y;
+	
 	output wire hsync, vsync, frame;
 	output reg [7:0] vga_out;
 	
-	wire clk_pixel;
+	// Simulation
+	output reg [$clog2(RES_H)-1:0] pixel_x;
+	output reg [$clog2(RES_V):0] pixel_y;
+	output wire data_enable;
+	output reg [7:0] sdl_r, sdl_g, sdl_b;
+	
+/*	output reg player_collision;
+	output reg [5:0] invader_collision;
+	
 	wire data_enable;
 	
 	// Current x and y positions of pixel being drawn
 	reg [$clog2(RES_H)-1:0] pixel_x;
 	reg [$clog2(RES_V)-1:0] pixel_y;
-	
+*/	
 	// Sprite start signals
 	wire start_player;
 	
 	// Sprite draw signals
 	wire player_draw;
+	wire laser_draw;
 
 	// Sprite output pixels
 	reg [7:0] player_out;
-		
-	clk_divider _clk_pixel (
-		.clk,
-		.rst,
-		.freq(PIXEL_FREQ),
-		.clk_out(clk_pixel)
-	);
 	
 	vga_timings _vga_timings (
-		.clk(clk_pixel),
+		.clk,
 		.rst,
 		.hsync,
 		.vsync,
@@ -74,7 +93,7 @@ module vga_controller(
 	);
 	
 	draw_sprite draw_player (
-		.clk(clk_pixel),
+		.clk,
 		.rst(arst),
 		.start(start_player),
 		.sprite(PLAYER),
@@ -85,9 +104,11 @@ module vga_controller(
 	
 	// Sprite drawing signals
 	assign start_player = (pixel_x == player_x && pixel_y == player_y);
+	assign laser_draw = (laser_active && pixel_x >= laser_x && pixel_x <= laser_x + PROJ_WIDTH_SCALED 
+								&& pixel_y >= laser_y && pixel_y <= laser_y + PROJ_HEIGHT_SCALED);
 	
-	always @(posedge clk_pixel) begin
-		if (arst) begin
+	always @(posedge clk or posedge rst or posedge arst) begin
+		if (rst || arst) begin
 			pixel_x <= 0;
 			pixel_y <= 0;
 			vga_out <= 0;
@@ -106,13 +127,39 @@ module vga_controller(
 				pixel_x <= pixel_x + 1;
 				
 			// Draw sprites
-			if (player_draw)
+			if (player_draw) begin
 				vga_out <= PLAYER_PIXEL;
-			else
+				
+				// Simulation
+				sdl_r <= 8'h00;
+				sdl_g <= 8'hFF;
+				sdl_b <= 8'h00;
+			end
+			else if (laser_draw) begin
+				vga_out <= WHITE;
+				
+				// Simulation
+				sdl_r <= 8'hFF;
+				sdl_g <= 8'hFF;
+				sdl_b <= 8'hFF;
+			end
+			else begin
 				vga_out <= 0;
+				
+				// Simulation
+				sdl_r <= 8'h00;
+				sdl_g <= 8'h00;
+				sdl_b <= 8'h00;
+			end
 		end
-		else
+		else begin
 			vga_out <= 0;
+			
+			// Simulation
+			sdl_r <= 8'h00;
+			sdl_g <= 8'h00;
+			sdl_b <= 8'h00;
+		end
 	end
 	
 endmodule
