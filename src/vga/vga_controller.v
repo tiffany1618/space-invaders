@@ -54,8 +54,7 @@ module vga_controller(
 	wire data_enable;
 	
 	// Current x and y positions of pixel being drawn
-	reg [$clog2(RES_H)-1:0] pixel_x;
-	reg [$clog2(RES_V)-1:0] pixel_y;
+	wire integer x, y;
 	
 	// Sprite start signals
 	reg start_player;
@@ -73,7 +72,9 @@ module vga_controller(
 		.hsync,
 		.vsync,
 		.data_enable,
-		.frame
+		.frame,
+		.ux(x),
+		.uy(y)
 	);
 	
 	draw_sprite draw_player (
@@ -82,33 +83,19 @@ module vga_controller(
 		.start(start_player),
 		.sprite(PLAYER),
 		.spr_x(player_x),
-		.pixel_x,
+		.pixel_x(x),
 		.spr_draw(player_draw)
 	);
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
-			pixel_x <= 0;
-			pixel_y <= 0;
 			vga_out <= 0;
 		end
-		else if (data_enable) begin
-			// Update pixel positions
-			if (pixel_x == RES_H - 1) begin
-				pixel_x <= 0;
-				
-				if (pixel_y == RES_V - 1)
-					pixel_y <= 0;
-				else
-					pixel_y <= pixel_y + 1;
-			end
-			else
-				pixel_x <= pixel_x + 1;
-				
+		else if (data_enable) begin		
 			// Sprite drawing signals
-			start_player <= (pixel_x == player_x && pixel_y == player_y);
-			laser_draw <= (laser_active && pixel_x >= laser_x && pixel_x <= laser_x + PROJ_WIDTH_SCALED 
-								&& pixel_y >= laser_y && pixel_y <= laser_y + PROJ_HEIGHT_SCALED);
+			start_player <= (x == player_x && y == player_y);
+			laser_draw <= (laser_active && x >= laser_x && y <= laser_x + PROJ_WIDTH_SCALED 
+								&& y >= laser_y && y <= laser_y + PROJ_HEIGHT_SCALED);
 				
 			// Draw sprites
 			if (player_draw) begin

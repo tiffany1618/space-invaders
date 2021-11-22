@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+//`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -50,7 +50,7 @@ module player(
 			player_y <= y_temp;
 		end
 		else begin
-			if (left && ~right && x_temp >= 0)
+			if (left && ~right)
 				x_temp <= x_temp - PLAYER_STEP;
 			
 			if (right && ~left && x_temp <= (RES_H - SPRITE_WIDTH_SCALED))

@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+//`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -55,7 +55,7 @@ module laser(
 			y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
 		end
 		else if (frame && laser_active) begin
-			if (y_temp == 0 || invader_collision)
+			if (y_temp == 0 || invader_collision != 0)
 				laser_active <= 0;
 			else begin
 				y_temp <= y_temp - LASER_STEP;

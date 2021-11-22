@@ -27,7 +27,9 @@ module vga_timings(
 	hsync,
 	vsync,
 	data_enable,
-	frame // Beginning of new frame
+	frame, // Beginning of new frame
+	ux,
+	uy
 	);
 	
 	`include "../util/constants.v"
@@ -35,13 +37,16 @@ module vga_timings(
 	input clk, rst;
 	
 	output reg hsync, vsync, data_enable, frame;
+	output integer ux, uy;
 	
-	reg signed [10:0] x, y;
+	integer x, y;
 	
 	always @(posedge clk or posedge rst) begin
 		if (rst) begin
 			x <= START_H;
 			y <= START_V;
+			ux <= 0;
+			uy <= 0;
 		end
 		else begin
 			if (x == END_H) begin
@@ -57,9 +62,13 @@ module vga_timings(
 			
 			hsync <= ~(x > SYNC_START_H && x <= SYNC_END_H);
 			vsync <= ~(y > SYNC_START_V && y <= SYNC_END_V);
-			data_enable <= ((x >= ACTIVE_START_H && x <= END_H)
-				|| (y >= ACTIVE_START_V && y <= END_V));
+			data_enable <= (x >= ACTIVE_START_H - 1 && y >= ACTIVE_START_V - 1);
 			frame <= (x == START_H && y == START_V);
+			
+			if (data_enable) begin
+				ux <= $unsigned(x);
+				uy <= $unsigned(y);
+			end
 		end
 	end
 endmodule

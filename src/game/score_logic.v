@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+//`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -33,7 +33,9 @@ module score_logic(
 	
 	`include "../util/constants.v"
 		
-	input clk, rst, arst, invader_collision, player_collision;
+	input clk, rst, arst;
+    input [5:0] invader_collision;
+    input player_collision;
 	
 	output reg [1:0] lives;
 	output reg [6:0] score;
@@ -44,7 +46,7 @@ module score_logic(
 			score <= 7'b0;
 		end
 		else begin
-			if (invader_collision && score < 99)
+			if (invader_collision != 0 && score < 99)
 				score <= score + 1;
 			
 			if (player_collision && lives > 0)

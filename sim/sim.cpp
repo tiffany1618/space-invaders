@@ -58,8 +58,8 @@ int main(int argc, char* argv[]) {
     top->player_x = 307;
     top->player_y = 464;
     top->laser_active = 0;
-    top->laser_x = 0;
-    top->laser_y = 0;
+    top->laser_x = 307;
+    top->laser_y = 464;
     top->eval();
     top->rst = 0;
     top->eval();
@@ -74,30 +74,30 @@ int main(int argc, char* argv[]) {
         top->eval();
 
         // update pixel if not in blanking interval
-        if (top->data_enable) {
-            Pixel* p = &screenbuffer[top->pixel_y*H_RES + top->pixel_x];
+        if (top->data_enable && top->x < H_RES) {
+            //std::cout << "x: " << top->x << ", y: " << top->y << std::endl;
+            Pixel* p = &screenbuffer[top->y*H_RES + top->x];
             p->a = 0xFF;  // transparency
             p->b = top->sdl_b;
             p->g = top->sdl_g;
             p->r = top->sdl_r;
-            std::cout << (int) p->a << std::endl;
         }
 
         // update texture once per frame at start of blanking
-        if (top->pixel_y == V_RES && top->pixel_x == 0) {
-            // check for quit event
-            SDL_Event e;
-            if (SDL_PollEvent(&e)) {
-                if (e.type == SDL_QUIT) {
-                    break;
-                }
-            }
-
+        if (top->frame) {
             SDL_UpdateTexture(sdl_texture, NULL, screenbuffer, H_RES*sizeof(Pixel));
             SDL_RenderClear(sdl_renderer);
             SDL_RenderCopy(sdl_renderer, sdl_texture, NULL, NULL);
             SDL_RenderPresent(sdl_renderer);
             frame_count++;
+        }
+
+        // check for quit event
+        SDL_Event e;
+        if (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                break;
+            }
         }
     }
     uint64_t end_ticks = SDL_GetPerformanceCounter();

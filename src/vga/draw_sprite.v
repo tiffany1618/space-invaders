@@ -38,7 +38,7 @@ module draw_sprite(
 	input [9:0] spr_x;
 	input [$clog2(RES_H)-1:0] pixel_x;
 	
-	output wire spr_draw;
+	output reg spr_draw;
 	
 	// States
 	localparam IDLE = 0; // Awaiting start signal
@@ -48,7 +48,7 @@ module draw_sprite(
 	localparam NEXT_LINE = 4; // Prepare for next sprite line
 	
 	reg [3:0] state, next_state;
-	reg [SPRITE_WIDTH-1:0] memory [SPRITE_HEIGHT-1:0]; // Sprite data
+	reg [SPRITE_WIDTH-1:0] memory [0:SPRITE_HEIGHT-1]; // Sprite data
 	reg [$clog2(SPRITE_WIDTH)-1:0] x; // Horizontal position within sprite
 	reg [$clog2(SPRITE_HEIGHT)-1:0] y; // Vertical position within sprite
 	reg [$clog2(SPRITE_SCALE):0] counter_x, counter_y; // Scaling counters
@@ -58,9 +58,19 @@ module draw_sprite(
 			PLAYER: $readmemb("../bitmaps/player.txt", memory);
 			INVADER1: $readmemb("../bitmaps/invader1.txt", memory);
 		endcase
+		
+		/*
+		// Manual initialization
+		memory[0] = 13'b0000001000000;
+		memory[1] = 13'b0000011100000;
+		memory[2] = 13'b0000011100000;
+		memory[3] = 13'b0111111111110;
+		memory[4] = 13'b1111111111111;
+		memory[5] = 13'b1111111111111;
+		memory[6] = 13'b1111111111111;
+		memory[7] = 13'b1111111111111;
+		*/
 	end
-	
-	assign spr_draw = (state == DRAW && memory[y][x]);
 	
 	always @(posedge clk or posedge rst) begin
 		if (rst) begin
@@ -69,9 +79,11 @@ module draw_sprite(
 			y <= 0;
 			counter_y <= 0;
 			counter_x <= 0;
+			spr_draw <= 0;
 		end
 		else begin
 			state <= next_state;
+			spr_draw <= (state == DRAW && memory[y][x]);
 			
 			case (state)
 				START: begin
