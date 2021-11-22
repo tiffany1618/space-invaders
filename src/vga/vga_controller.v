@@ -67,7 +67,7 @@ module vga_controller(
 	// Sprite draw signals
 	wire player_draw, invader_draw;
 	reg laser_draw;
-	reg invader_x, invader_y;
+	reg [9:0] invader_x;
 	reg [2:0] i; // Vertical counter
 	reg [3:0] j; // Horizontal counter
 
@@ -125,6 +125,10 @@ module vga_controller(
 					if (invaders[i * j] && x >= invaders_x + (INVADERS_OFFSET_H * j) && x < invaders_x + (INVADERS_OFFSET_H * (j + 1))
 							&& y < invaders_y + (INVADERS_OFFSET_V * i) && y >= invaders_y + (INVADERS_OFFSET_V * (i - 1))) begin
 						start_invader <= i * j + 1;
+						invader_x <= invaders_x + (INVADERS_OFFSET_H * j);
+					end
+					else begin
+						start_invader <= 0;
 					end
 				end
 			end
