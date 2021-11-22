@@ -28,7 +28,8 @@ parameter TOTAL_PIXELS = RES_V * RES_H - 1;
 // 8-bit colors
 parameter BLACK = 8'b00000000;
 parameter WHITE = 8'b11111111;
-parameter GREEN = 8'b00011100;
+parameter GREEN = 8'b00111000;
+parameter BLUE = 8'b11000000;
 
 // Sprite values
 parameter SPRITE_HEIGHT = 8;
@@ -43,13 +44,11 @@ parameter PLAYER = 0;
 parameter INVADER1 = 1;
 
 // Player values
-parameter PLAYER_PIXEL = GREEN;
 parameter PLAYER_START_X = (RES_H / 2) - (SPRITE_WIDTH_SCALED / 2);
 parameter PLAYER_START_Y = RES_V - (SPRITE_HEIGHT_SCALED);
 parameter PLAYER_STEP = 10;
 
 // Invader values
-parameter INVADER_PIXEL = WHITE;
 parameter INVADER_PADDING = 8;
 parameter INVADERS_HORZ_NUM = 11;
 parameter INVADERS_VERT_NUM = 5;

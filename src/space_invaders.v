@@ -47,7 +47,7 @@ module space_invaders(
 	output wire [7:0] vga_color;
 	
 	// Clocks
-	wire clk_200Hz;
+	wire clk_100Hz, clk_10Hz;
 	
 	// Game
 	wire shoot, left, right, arst;
@@ -67,14 +67,14 @@ module space_invaders(
 	wire laser_active;
 	wire [9:0] laser_x, laser_y;
 	
-	clk_divider _clk_200Hz (
+	clk_divider _clk_100Hz (
 		// Inputs
 		.clk,
 		.rst,
-		.freq(200),
+		.freq(100),
 		
 		// Outputs
-		.clk_out(clk_200Hz)
+		.clk_out(clk_100Hz)
 	);
 			
 	clk_divider _clk_pixel (
@@ -82,6 +82,16 @@ module space_invaders(
 		.rst,
 		.freq(PIXEL_FREQ),
 		.clk_out(clk_pixel)
+	);
+    
+    clk_divider _clk_10Hz (
+		// Inputs
+		.clk,
+		.rst,
+		.freq(10),
+		
+		// Outputs
+		.clk_out(clk_10Hz)
 	);
 	
 	debouncer _debouncer (
@@ -125,23 +135,39 @@ module space_invaders(
 		.frame
 	);
 	
-	game _game (
+	score_logic _score_logic (
 		.clk(clk_pixel),
 		.rst,
 		.arst,
-		.left,
-		.right,
-		.shoot,
 		.invader_collision,
 		.player_collision,
-		.frame,
 		.lives,
-		.score,
+		.score
+	);
+	
+	player _player (
+		.clk,
+		.clk_move(clk_10Hz),
+		.rst,
+		.arst,
+		.frame,
+		.left,
+		.right,
 		.player_x,
-		.player_y,
+		.player_y
+	);
+	
+	laser _laser (
+      .clk,
+		.rst,
+		.arst,
+		.frame,
+		.shoot,
+		.player_x,
+		.invader_collision,
+		.laser_active,
 		.laser_x,
-		.laser_y,
-		.laser_active
+		.laser_y
 	);
 
 endmodule

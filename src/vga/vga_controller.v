@@ -29,6 +29,8 @@ module vga_controller(
 	laser_active,
 	laser_x,
 	laser_y,
+   invaders_x,
+	invaders_y,
 	
 	// Outputs
 	vga_out, // RRRGGGBB
@@ -42,7 +44,7 @@ module vga_controller(
 	`include "../util/constants.v"
 	
 	input clk, rst, arst;
-	input [9:0] player_x, player_y;
+	input [9:0] player_x, player_y, invaders_x, invaders_y;
 	input laser_active;
 	input [9:0] laser_x, laser_y;
 	
@@ -61,7 +63,10 @@ module vga_controller(
 	
 	// Sprite draw signals
 	wire player_draw;
-	reg laser_draw;
+	reg laser_draw, invader_draw;
+	reg invader_x, invader_y;
+	reg [INVADERS_HORZ_NUM-1:0] invaders [0:INVADERS_VERT_NUM-1];
+	integer i, j;
 
 	// Sprite output pixels
 	reg [7:0] player_out;
@@ -87,23 +92,50 @@ module vga_controller(
 		.spr_draw(player_draw)
 	);
 	
+    draw_sprite draw_invader1 (
+		.clk,
+		.rst(arst),
+		.start(start_invader),
+		.sprite(INVADER1),
+		.spr_x(invader_x),
+		.pixel_x(x),
+		.spr_draw(invader_draw)        
+    );
+    
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			vga_out <= 0;
+            
+			for (i = 0; i < INVADERS_VERT_NUM; i = i + 1) begin
+				for (j = 0; j < INVADERS_HORZ_NUM; j = j + 1) begin
+					invaders[i][j] <= 1;
+				end
+			end
 		end
 		else if (data_enable) begin		
 			// Sprite drawing signals
 			start_player <= (x == player_x && y == player_y);
-			laser_draw <= (laser_active && x >= laser_x && y <= laser_x + PROJ_WIDTH_SCALED 
-								&& y >= laser_y && y <= laser_y + PROJ_HEIGHT_SCALED);
+			laser_draw <= (laser_active && x >= laser_x && x <= laser_x + PROJ_WIDTH_SCALED 
+								&& y <= laser_y && y >= laser_y - PROJ_HEIGHT_SCALED);
+                                      
+			for (i = 0; i < INVADERS_VERT_NUM; i = i + 1) begin
+				for (j = 0; j < INVADERS_HORZ_NUM; j = j + 1) begin
+					 if(invaders[i][j]) begin
+							
+					 end
+				end
+			end
 				
 			// Draw sprites
 			if (player_draw) begin
-				vga_out <= PLAYER_PIXEL;
+				vga_out <= GREEN;
 			end
 			else if (laser_draw) begin
 				vga_out <= WHITE;
 			end
+            else if (invader_draw) begin
+                vga_out <= BLUE;
+            end
 			else begin
 				vga_out <= 0;
 			end

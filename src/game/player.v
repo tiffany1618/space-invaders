@@ -21,6 +21,7 @@
 module player(
 	// Inputs
 	clk,
+   clk_move,
 	rst,
 	arst,
 	frame,
@@ -34,7 +35,7 @@ module player(
 	
 	`include "../util/constants.v"
 
-	input clk, rst, arst, frame, left, right;
+	input clk, clk_move, rst, arst, frame, left, right;
 	
 	output reg [9:0] player_x, player_y;
 	
@@ -49,11 +50,11 @@ module player(
 			player_x <= x_temp;
 			player_y <= y_temp;
 		end
-		else begin
-			if (left && ~right)
+		else if (clk_move) begin
+			if (left && ~right && x_temp > PLAYER_STEP)
 				x_temp <= x_temp - PLAYER_STEP;
 			
-			if (right && ~left && x_temp <= (RES_H - SPRITE_WIDTH_SCALED))
+			if (right && ~left && x_temp < (RES_H - SPRITE_WIDTH_SCALED - PLAYER_STEP))
 				x_temp <= x_temp + PLAYER_STEP;
 		end
 	end
