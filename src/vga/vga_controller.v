@@ -29,6 +29,7 @@ module vga_controller(
 	laser_active,
 	laser_x,
 	laser_y,
+	invaders,
    invaders_x,
 	invaders_y,
 	
@@ -45,6 +46,7 @@ module vga_controller(
 	
 	input clk, rst, arst;
 	input [9:0] player_x, player_y, invaders_x, invaders_y;
+	input [54:0] invaders;
 	input laser_active;
 	input [9:0] laser_x, laser_y;
 	
@@ -60,13 +62,14 @@ module vga_controller(
 	
 	// Sprite start signals
 	reg start_player;
+	reg [5:0] start_invader;
 	
 	// Sprite draw signals
-	wire player_draw;
-	reg laser_draw, invader_draw;
+	wire player_draw, invader_draw;
+	reg laser_draw;
 	reg invader_x, invader_y;
-	reg [INVADERS_HORZ_NUM-1:0] invaders [0:INVADERS_VERT_NUM-1];
-	integer i, j;
+	reg [2:0] i; // Vertical counter
+	reg [3:0] j; // Horizontal counter
 
 	// Sprite output pixels
 	reg [7:0] player_out;
@@ -95,7 +98,7 @@ module vga_controller(
     draw_sprite draw_invader1 (
 		.clk,
 		.rst(arst),
-		.start(start_invader),
+		.start(start_invader != 0),
 		.sprite(INVADER1),
 		.spr_x(invader_x),
 		.pixel_x(x),
@@ -105,12 +108,11 @@ module vga_controller(
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			vga_out <= 0;
-            
-			for (i = 0; i < INVADERS_VERT_NUM; i = i + 1) begin
-				for (j = 0; j < INVADERS_HORZ_NUM; j = j + 1) begin
-					invaders[i][j] <= 1;
-				end
-			end
+			player_collision <= 0;
+			invader_collision <= 0;
+			start_player <= 0;
+			start_invader <= 0;
+			laser_draw <= 0;
 		end
 		else if (data_enable) begin		
 			// Sprite drawing signals
@@ -118,11 +120,12 @@ module vga_controller(
 			laser_draw <= (laser_active && x >= laser_x && x <= laser_x + PROJ_WIDTH_SCALED 
 								&& y <= laser_y && y >= laser_y - PROJ_HEIGHT_SCALED);
                                       
-			for (i = 0; i < INVADERS_VERT_NUM; i = i + 1) begin
-				for (j = 0; j < INVADERS_HORZ_NUM; j = j + 1) begin
-					 if(invaders[i][j]) begin
-							
-					 end
+			for (i = 0; i < INVADERS_V - 1; i = i + 1) begin
+				for (j = 0; j < INVADERS_H - 1; j = j + 1) begin
+					if (invaders[i * j] && x >= invaders_x + (INVADERS_OFFSET_H * j) && x < invaders_x + (INVADERS_OFFSET_H * (j + 1))
+							&& y < invaders_y + (INVADERS_OFFSET_V * i) && y >= invaders_y + (INVADERS_OFFSET_V * (i - 1))) begin
+						start_invader <= i * j + 1;
+					end
 				end
 			end
 				
@@ -133,11 +136,16 @@ module vga_controller(
 			else if (laser_draw) begin
 				vga_out <= WHITE;
 			end
-            else if (invader_draw) begin
-                vga_out <= BLUE;
-            end
+			else if (invader_draw) begin
+				 vga_out <= BLUE;
+			end
 			else begin
 				vga_out <= 0;
+			end
+			
+			// Detect collisions
+			if (laser_draw && invader_draw) begin
+				invader_collision[start_invader-1] <= 1;
 			end
 		end
 		else begin

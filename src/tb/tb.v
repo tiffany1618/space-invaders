@@ -33,7 +33,7 @@ module tb;
 	reg btn_rst;
 
 	// Outputs
-	wire an_lives;
+	wire [3:0] an_lives;
 	wire [6:0] seg_lives;
 	wire an_score;
 	wire [6:0] seg_score;

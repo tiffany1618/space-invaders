@@ -41,7 +41,8 @@ module space_invaders(
 
 	input clk, rst, btn_right, btn_left, btn_shoot, btn_rst;
 	
-	output wire an_lives, an_score;
+	output wire an_score;
+	output wire [3:0] an_lives;
 	output wire [6:0] seg_lives, seg_score;
 	output wire hsync, vsync;
 	output wire [7:0] vga_color;
@@ -62,6 +63,7 @@ module space_invaders(
 	// Sprites
 	wire [9:0] player_x, player_y;
 	wire [9:0] invaders_x, invaders_y;
+	wire [54:0] invaders;
 	
 	// Projectiles
 	wire laser_active;
@@ -111,6 +113,7 @@ module space_invaders(
 	segment_displays _segment_displays (
 		.clk,
 		.clk_display(clk_200Hz),
+		.rst,
 		.arst,
 		.lives,
 		.score,
@@ -168,6 +171,17 @@ module space_invaders(
 		.laser_active,
 		.laser_x,
 		.laser_y
+	);
+	
+	invaders _invaders (
+		.clk,
+		.rst,
+		.arst,
+		.frame,
+		.invader_collision,
+		.invaders,
+		.invaders_x,
+		.invaders_y
 	);
 
 endmodule

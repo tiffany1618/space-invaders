@@ -22,6 +22,7 @@ module segment_displays(
 	// Inputs
 	clk,
 	clk_display,
+	rst,
 	arst,
 	lives,
    score,
@@ -33,22 +34,22 @@ module segment_displays(
    an_score
    );
 	 
-	input clk, clk_display, arst;
+	input clk, clk_display, rst, arst;
 	input [1:0] lives;
 	input [6:0] score;
 	
-    output reg an_score;
-	output reg [4:0] an_lives;
+   output reg an_score;
+	output reg [3:0] an_lives;
 	output reg [6:0] seg_lives, seg_score;
 	
 	reg [3:0] digit;
-    reg counter;
+   reg counter;
 	
-	always @(posedge clk) begin
-		if (arst) begin
+	always @(posedge clk or posedge rst or posedge arst) begin
+		if (rst || arst) begin
 			counter <= 0;
 			an_lives <= 4'b1110;
-            an_score <= 0;
+         an_score <= 0;
 		end
 		else if (clk_display) begin
 			dig_to_seg(lives, seg_lives);
@@ -87,7 +88,8 @@ module segment_displays(
 			endcase
 		end
 	endtask
-    task inverted_dig_to_seg;
+	
+   task inverted_dig_to_seg;
 		input [3:0] dig;
 		output reg [6:0] seg;
 		
@@ -107,4 +109,5 @@ module segment_displays(
 			endcase
 		end
 	endtask
+
 endmodule
