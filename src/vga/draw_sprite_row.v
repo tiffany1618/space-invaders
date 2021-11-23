@@ -1,54 +1,41 @@
 `timescale 1ns / 1ps
 
-// Draws a scaled sprite from a bitmap
-// Implemented as FSM, based on https://projectf.io/posts/hardware-sprites/
-module draw_sprite(
+// Draws a row of 11 scaled sprites from a single bitmap
+// Invididual sprites in the row may be visible or hidden
+// Implemented as FSM
+module draw_sprite_row(
 	input clk,
 	input rst,
-	input start, // Signals when to start drawing
+	input start, // Signals when to start drawing the row
 	input [2:0] sprite, // Enum for sprite to draw
-	input [9:0] spr_x, // Top left horizontal coord of sprite
-	input [$clog2(RES_H)-1:0] pixel_x, // Current horizontal screen position
+	input [9:0] spr_x, // Top left horizontal coord of sprite row
+	input [$clog2(RES_H):0] pixel_x, // Current horizontal screen position
+	input [INVADERS_H-1:0] sprites, // 1 if sprite should be drawn, 0 otherwise
 	
-   // 1 if the pixel currently drawn is a pixel within the sprite
-	output reg spr_draw
+	// Non-zero if the pixel currently drawn is a pixel within a sprite
+	// Value denotes the position of the sprite currently being drawn
+	output reg [$clog2(INVADERS_H):0] spr_draw
 	);
 	
 	`include "../util/constants.v"
 
 	// States
 	localparam IDLE = 0; // Awaiting start signal
-	localparam START = 1; // Prepare for new sprite drawing
+	localparam START = 1; // Prepare for new sprite row
 	localparam AWAIT_POS = 2; // Await horizontal position
 	localparam DRAW = 3; // Draw pixel
 	localparam NEXT_LINE = 4; // Prepare for next sprite line
 	
 	reg [3:0] state, next_state;
 	reg [SPRITE_WIDTH-1:0] memory [0:SPRITE_HEIGHT-1]; // Sprite data
-	reg [$clog2(SPRITE_WIDTH)-1:0] x; // Horizontal position within sprite
-	reg [$clog2(SPRITE_HEIGHT)-1:0] y; // Vertical position within sprite
+	reg [$clog2(SPRITE_WIDTH):0] x; // Horizontal position within sprite
+	reg [$clog2(SPRITE_HEIGHT):0] y; // Vertical position within sprite
 	reg [$clog2(SPRITE_SCALE):0] counter_x, counter_y; // Scaling counters
+	reg [$clog2(INVADERS_H):0] i; // Sprite counter
 	
 	initial begin
-		/* Reading from a file didn't work for some reason
-		case (sprite)
-			PLAYER: $readmemb("../bitmaps/player.txt", memory);
-			INVADER1: $readmemb("../bitmaps/invader1.txt", memory);
-		endcase
-      */
-		
       // Manual initialization
 		case (sprite)
-			PLAYER: begin
-				memory[0] = 13'b0000001000000;
-				memory[1] = 13'b0000011100000;
-				memory[2] = 13'b0000011100000;
-				memory[3] = 13'b0111111111110;
-				memory[4] = 13'b1111111111111;
-				memory[5] = 13'b1111111111111;
-				memory[6] = 13'b1111111111111;
-				memory[7] = 13'b1111111111111;
-			end
 			INVADER1: begin
 				memory[0] = 13'b0000011110000;
 				memory[1] = 13'b0011111111110;
@@ -70,19 +57,26 @@ module draw_sprite(
 			counter_y <= 0;
 			counter_x <= 0;
 			spr_draw <= 0;
+			i <= 0;
 		end
 		else begin
 			state <= next_state;
-			spr_draw <= (state == DRAW && memory[y][x]);
+			
+			if (state == DRAW && memory[y][x])
+				spr_draw <= i + 1;
+			else
+				spr_draw <= 0;
 			
 			case (state)
 				START: begin
 					y <= 0;
 					counter_y <= 0;
+					i <= 0;
 				end
 				AWAIT_POS: begin
 					x <= 0;
 					counter_x <= 0;
+					i <= i + 1;
 				end
 				DRAW: begin
 					if (SPRITE_SCALE <= 1 || counter_x  == SPRITE_SCALE - 1) begin
@@ -93,6 +87,8 @@ module draw_sprite(
 						counter_x <= counter_x + 1;
 				end
 				NEXT_LINE: begin
+					i <= 0;
+					
 					if (SPRITE_SCALE <= 1 || counter_y == SPRITE_SCALE - 1) begin
 						y <= y + 1;
 						counter_y <= 0;
@@ -110,7 +106,12 @@ module draw_sprite(
 		case (state)
 			IDLE: next_state = start ? START : IDLE;
 			START: next_state = AWAIT_POS;
-			AWAIT_POS: next_state = (pixel_x == spr_x) ? DRAW : AWAIT_POS;
+			AWAIT_POS: begin
+				if (sprites[i] && pixel_x == spr_x + (INVADERS_OFFSET_H * i))
+					next_state = DRAW;
+				else
+					next_state = AWAIT_POS;
+			end
 			DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
@@ -123,5 +124,5 @@ module draw_sprite(
 			default: next_state = IDLE;
 		endcase
 	end
-
+	
 endmodule

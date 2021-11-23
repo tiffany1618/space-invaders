@@ -7,15 +7,15 @@ module invaders(
 	input arst, // Reset button (async reset)
 	input frame, // Signals start of blanking interval
 
-    // The number of which invader has been hit (0 if there are currently no collisions)
+   // The number of which invader has been hit (0 if there are currently no collisions)
 	input [5:0] invader_collision, 	
 
-    // Represents which invaders are currently alive
-    // 1 for alive, 0 for killed
+   // Represents which invaders are currently alive
+   // 1 for alive, 0 for killed
 	output reg [54:0] invaders,	
 
-    // Coordinates of top left corner of invaders grid
-    output reg [9:0] invaders_x,
+   // Coordinates of top left corner of invaders grid
+   output reg [9:0] invaders_x,
 	output reg [9:0] invaders_y
 	);
 	
