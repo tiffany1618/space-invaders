@@ -1,59 +1,30 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    13:29:00 11/15/2021 
-// Design Name: 
-// Module Name:    vga_controller 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Logic for VGA controller
 module vga_controller(
-	// Inputs
-	clk,
-	rst,
-	arst,
+	input clk,
+	input rst,
+	input arst, // Reset button (async reset)
+
+    // Game inputs
+	input [9:0] player_x,
+	input [9:0] player_y,
+	input laser_active,
+	input [9:0] laser_x,
+	input [9:0] laser_y,
+	input [54:0] invaders,
+    input [9:0] invaders_x,
+	input [9:0] invaders_y,
 	
-	player_x,
-	player_y,
-	laser_active,
-	laser_x,
-	laser_y,
-	invaders,
-   invaders_x,
-	invaders_y,
-	
-	// Outputs
-	vga_out, // RRRGGGBB
-	hsync,
-	vsync,
-	frame,
-	player_collision,
-	invader_collision
+	output reg [7:0] vga_out, // 8-bit color pixel
+    output hsync, // Horizontal sync
+	output vsync, // Vertical sync
+	output frame, // Signals start of blanking interval
+	output reg player_collision, // 1 if player and missile collided
+	output reg [5:0] invader_collision // Non-zero if invader and laser collided
 	);
 	
 	`include "../util/constants.v"
-	
-	input clk, rst, arst;
-	input [9:0] player_x, player_y, invaders_x, invaders_y;
-	input [54:0] invaders;
-	input laser_active;
-	input [9:0] laser_x, laser_y;
-	
-	output wire hsync, vsync, frame;
-	output reg [7:0] vga_out;
-	output reg player_collision;
-	output reg [5:0] invader_collision;
 	
 	wire data_enable;
 	
@@ -67,13 +38,10 @@ module vga_controller(
 	// Sprite draw signals
 	wire player_draw, invader_draw;
 	reg laser_draw;
-	reg [9:0] invader_x;
+	reg [9:0] invader_x; // Top left horizontal coord of invader currently being drawn
 	reg [2:0] i; // Vertical counter
 	reg [3:0] j; // Horizontal counter
 
-	// Sprite output pixels
-	reg [7:0] player_out;
-	
 	vga_timings _vga_timings (
 		.clk,
 		.rst,
@@ -148,9 +116,10 @@ module vga_controller(
 			end
 			
 			// Detect collisions
-			if (laser_draw && invader_draw) begin
-				invader_collision[start_invader-1] <= 1;
-			end
+			if (laser_draw && invader_draw)
+				invader_collision <= start_invader;
+			else
+				invader_collision <= 0;
 		end
 		else begin
 			vga_out <= 0;

@@ -1,45 +1,26 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    12:21:54 11/15/2021 
-// Design Name: 
-// Module Name:    debouncer 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Debounces button signals
 module debouncer(
-	// Inputs
-	clk,
-	clk_debouncer,
-	rst,
-	btn_shoot,
-	btn_left,
-	btn_right,
-	btn_rst,
-	
-	// Outputs
-	shoot,
-	left,
-	right,
-	arst
-   );
+	input clk,
+	input clk_debouncer, // Sampling frequency
+	input rst,
 
-	input clk, clk_debouncer, rst, btn_shoot, btn_left, btn_right, btn_rst;
+    // Button signals
+	input btn_shoot,
+	input btn_left,
+	input btn_right,
+	input btn_rst,
 	
-	output reg shoot, left, right, arst;
+    // Debounced signals
+	output reg shoot,
+	output reg left,
+	output reg right,
+	output reg arst
+    );
 
-	reg [2:0] step_shoot, step_left, step_right, step_arst;
+    // Store three samples for each button
+    reg [2:0] step_shoot, step_left, step_right, step_arst;
 
 	always @ (posedge clk) begin
 		if (rst) begin
@@ -60,6 +41,8 @@ module debouncer(
 			step_right <= {btn_right, step_right[2:1]};
 			step_arst <= {btn_rst, step_arst[2:1]};
 
+            // Event occurs when each button is high and stops when each
+            // button is low
 			if (step_right == 3'b110)
 				right <= 1;
 			else if (step_right == 3'b001)
@@ -70,6 +53,7 @@ module debouncer(
 			else if (step_left == 3'b001)
 				left <= 0;
 			 
+            // Single event occurs for each button press
 			shoot <= (step_shoot == 3'b110);
 			arst <= (step_arst == 3'b110);
 		end

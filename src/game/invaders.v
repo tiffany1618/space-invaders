@@ -1,43 +1,25 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    09:28:52 11/22/2021 
-// Design Name: 
-// Module Name:    invaders 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Logic for invaders
 module invaders(
-	// Inputs
-	clk,
-	rst,
-	arst,
-	frame,
-	invader_collision,
-	
-	// Outputs
-	invaders,
-	invaders_x,
-	invaders_y,
+	input clk,
+	input rst,
+	input arst, // Reset button (async reset)
+	input frame, // Signals start of blanking interval
+
+    // The number of which invader has been hit (0 if there are currently no collisions)
+	input [5:0] invader_collision, 	
+
+    // Represents which invaders are currently alive
+    // 1 for alive, 0 for killed
+	output reg [54:0] invaders,	
+
+    // Coordinates of top left corner of invaders grid
+    output reg [9:0] invaders_x,
+	output reg [9:0] invaders_y
 	);
 	
 	`include "../util/constants.v"
-	input clk, rst, arst, frame;
-	input [5:0] invader_collision;
-	
-	output reg [54:0] invaders;
-	output reg [9:0] invaders_x, invaders_y;
 	
 	reg [54:0] invaders_temp;
 	reg [9:0] x_temp, y_temp;

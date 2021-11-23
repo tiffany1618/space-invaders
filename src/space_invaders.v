@@ -1,52 +1,24 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    12:54:40 11/15/2021 
-// Design Name: 
-// Module Name:    space_invaders 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
 module space_invaders(
-	// Inputs
-	clk,
-	rst,
-	btn_right,
-	btn_left,
-	btn_shoot,
-	btn_rst,
+	input clk,
+	input rst,
+	input btn_right,
+	input btn_left,
+	input btn_shoot,
+	input btn_rst,
 	
-	// Outputs
-	an_lives,
-	seg_lives,
-	an_score,
-	seg_score,
-	vga_color,
-	hsync,
-	vsync
+	output [3:0] an_lives,
+	output [6:0] seg_lives,
+	output an_score,
+	output [6:0] seg_score,
+	output [7:0] vga_color,
+	output hsync,
+	output vsync
 	);
 	
 	`include "util/constants.v"
 
-	input clk, rst, btn_right, btn_left, btn_shoot, btn_rst;
-	
-	output wire an_score;
-	output wire [3:0] an_lives;
-	output wire [6:0] seg_lives, seg_score;
-	output wire hsync, vsync;
-	output wire [7:0] vga_color;
-	
 	// Clocks
 	wire clk_100Hz, clk_10Hz;
 	
@@ -70,12 +42,9 @@ module space_invaders(
 	wire [9:0] laser_x, laser_y;
 	
 	clk_divider _clk_100Hz (
-		// Inputs
 		.clk,
 		.rst,
 		.freq(100),
-		
-		// Outputs
 		.clk_out(clk_100Hz)
 	);
 			
@@ -87,12 +56,9 @@ module space_invaders(
 	);
     
     clk_divider _clk_10Hz (
-		// Inputs
 		.clk,
 		.rst,
 		.freq(10),
-		
-		// Outputs
 		.clk_out(clk_10Hz)
 	);
 	
@@ -164,7 +130,7 @@ module space_invaders(
 	);
 	
 	laser _laser (
-      .clk,
+        .clk,
 		.rst,
 		.arst,
 		.frame,

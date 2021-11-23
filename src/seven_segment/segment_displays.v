@@ -1,59 +1,33 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    12:32:16 11/15/2021 
-// Design Name: 
-// Module Name:    segment_displays 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Seven-segment display controllers
 module segment_displays(
-	// Inputs
-	clk,
-	clk_display,
-	rst,
-	arst,
-	lives,
-   score,
+	input clk,
+	input clk_display, // Frequency at which to cycle through the displays
+	input rst,
+	input arst, // Reset button (async reset)
+	input [1:0] lives,
+    input [6:0] score,
 	
-	// Outputs
-	an_lives,
-	seg_lives,
-   seg_score, 
-   an_score
-   );
+    output reg an_score, // Anode for score displays
+	output reg [3:0] an_lives, // Anode for lives displays
+    output reg [6:0] seg_score,  // Cathodes for score displays
+	output reg [6:0] seg_lives // Cathodes for lives displays
+    );
 	 
-	input clk, clk_display, rst, arst;
-	input [1:0] lives;
-	input [6:0] score;
-	
-   output reg an_score;
-	output reg [3:0] an_lives;
-	output reg [6:0] seg_lives, seg_score;
-	
 	reg [3:0] digit;
-   reg counter;
+    reg counter;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			counter <= 0;
-			an_lives <= 4'b1110;
-         an_score <= 0;
+			an_lives <= 4'b1110; // Only using 1 of 4 displays
+            an_score <= 0;
 		end
 		else if (clk_display) begin
 			dig_to_seg(lives, seg_lives);
 			
+            // Cycle through the two displays for score
 			counter <= counter + 1;
 			case(counter)
 				0: begin
@@ -68,6 +42,7 @@ module segment_displays(
 		end
 	end
 	
+    // Segment output for active low display
 	task dig_to_seg;
 		input [3:0] dig;
 		output reg [6:0] seg;
@@ -87,15 +62,16 @@ module segment_displays(
 				default: seg <= 7'b1111111;
 			endcase
 		end
-	endtask
+    endtask
 	
-   task inverted_dig_to_seg;
-		input [3:0] dig;
+    // Segment output for active high display
+    task inverted_dig_to_seg;
+        input [3:0] dig;
 		output reg [6:0] seg;
 		
 		begin
-			case(dig)
-				0: seg <= 7'b0111111;
+		    case(dig)
+			    0: seg <= 7'b0111111;
 				1: seg <= 7'b0000110;
 				2: seg <= 7'b1011011;
 				3: seg <= 7'b1001111;
@@ -108,6 +84,6 @@ module segment_displays(
 				default: seg <= 7'b0000000;
 			endcase
 		end
-	endtask
+    endtask
 
 endmodule

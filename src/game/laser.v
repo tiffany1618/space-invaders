@@ -1,48 +1,26 @@
-//`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    12:51:11 11/20/2021 
-// Design Name: 
-// Module Name:    laser 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+`timescale 1ns / 1ps
+
+// Logic for player's laser
+// Only one laser allowed on screen at a time
 module laser(
-	// Inputs
-	clk,
-	rst,
-	arst,
-	frame,
-	shoot,
-	player_x,
-	invader_collision,
+	input clk,
+	input rst,
+	input arst, // Reset button (async reset)
+	input frame, // Signals start of blanking interval
+	input shoot, // Debounced shoot button signal
+	input [9:0] player_x, // Current top left horizontal player position
+	input [5:0] invader_collision,
 	
-	// Outputs
-	laser_active,
-	laser_x,
-	laser_y
+    // 1 if laser should appear, 0 if not
+	output reg laser_active,
+
+    // Coordinates of top left corner of laser
+	output reg [9:0] laser_x,
+	output reg [9:0] laser_y
 	);
 	
 	`include "../util/constants.v"
 
-	input clk, rst, arst, frame, shoot;
-	input [9:0] player_x;
-	input [5:0] invader_collision;
-	
-	output reg laser_active;
-	output reg [9:0] laser_x, laser_y;
-	
 	reg [9:0] x_temp, y_temp;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin

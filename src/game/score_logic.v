@@ -1,44 +1,18 @@
-//`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    14:53:23 11/15/2021 
-// Design Name: 
-// Module Name:    score_logic 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+`timescale 1ns / 1ps
+
+// Keeps track of the current score and player lives
 module score_logic(
-	// Inputs
-	clk,
-	rst,
-	arst,
-	invader_collision,
-	player_collision,
+	input clk,
+	input rst,
+	input arst,
+	input [5:0] invader_collision,
+	input player_collision,
 	
-	// Outputs
-	lives,
-	score
+	output reg [1:0] lives, // Current player lives
+	output reg [6:0] score // Current player score
 	);
 	
 	`include "../util/constants.v"
-		
-	input clk, rst, arst;
-    input [5:0] invader_collision;
-    input player_collision;
-	
-	output reg [1:0] lives;
-	output reg [6:0] score;
 
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin

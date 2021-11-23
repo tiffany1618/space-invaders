@@ -1,43 +1,20 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    21:45:23 11/15/2021 
-// Design Name: 
-// Module Name:    vga_timings 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Outputs timing signals for VGA controller
+// Based on https://projectf.io/posts/fpga-graphics/
 module vga_timings(
-	// Inputs
-	clk,
-	rst,
+	input clk,
+	input rst,
 	
-	// Outputs
-	hsync,
-	vsync,
-	data_enable,
-	frame, // Beginning of new frame
-	ux,
-	uy
+	output reg hsync, // Horizontal sync
+	output reg vsync, // Vertical sync
+	output reg data_enable, // High during active drawing period
+	output reg frame, // Signals start of blanking interval
+	output integer ux, // Current unsigned horizontal screen position
+	output integer uy // Current unsigned vertical screen position
 	);
 	
 	`include "../util/constants.v"
-	
-	input clk, rst;
-	
-	output reg hsync, vsync, data_enable, frame;
-	output integer ux, uy;
 	
 	integer x, y;
 	

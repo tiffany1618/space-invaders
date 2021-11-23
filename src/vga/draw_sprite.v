@@ -1,45 +1,21 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    16:59:33 11/17/2021 
-// Design Name: 
-// Module Name:    draw_sprite 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+
+// Draws a scaled sprite from a bitmap
+// Implemented as FSM, based on https://projectf.io/posts/hardware-sprites/
 module draw_sprite(
-	// Inputs
-	clk,
-	rst,
-	start,
-	sprite,
-	spr_x,
-	pixel_x,
+	input clk,
+	input rst,
+	input start, // Signals when to start drawing
+	input [2:0] sprite, // Enum for sprite to draw
+	input [9:0] spr_x, // Top left horizontal coord of sprite
+	input [$clog2(RES_H)-1:0] pixel_x,
 	
-	// Outputs
-	spr_draw
+    // 1 if the pixel currently drawn is a pixel within the sprite
+	output reg spr_draw
 	);
 	
 	`include "../util/constants.v"
-	
-	input clk, rst, start;
-	input [2:0] sprite;
-	input [9:0] spr_x;
-	input [$clog2(RES_H)-1:0] pixel_x;
-	
-	output reg spr_draw;
-	
+
 	// States
 	localparam IDLE = 0; // Awaiting start signal
 	localparam START = 1; // Prepare for new sprite drawing
@@ -54,7 +30,7 @@ module draw_sprite(
 	reg [$clog2(SPRITE_SCALE):0] counter_x, counter_y; // Scaling counters
 	
 	initial begin
-        /*
+        /* Reading from a file didn't work for some reason
 		case (sprite)
 			PLAYER: $readmemb("../bitmaps/player.txt", memory);
 			INVADER1: $readmemb("../bitmaps/invader1.txt", memory);
@@ -133,9 +109,9 @@ module draw_sprite(
 	always @* begin
 		case (state)
 			IDLE: next_state = start ? START : IDLE;
-         START: next_state = AWAIT_POS;
-         AWAIT_POS: next_state = (pixel_x == spr_x) ? DRAW : AWAIT_POS;
-         DRAW: begin
+            START: next_state = AWAIT_POS;
+            AWAIT_POS: next_state = (pixel_x == spr_x) ? DRAW : AWAIT_POS;
+            DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
 				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
@@ -143,8 +119,8 @@ module draw_sprite(
 				else
 					next_state = IDLE;
 			end
-         NEXT_LINE:  next_state = AWAIT_POS;
-         default: next_state = IDLE;
+            NEXT_LINE:  next_state = AWAIT_POS;
+            default: next_state = IDLE;
 		endcase
 	end
 

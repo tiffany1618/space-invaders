@@ -1,43 +1,20 @@
-//`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    20:11:14 11/18/2021 
-// Design Name: 
-// Module Name:    player 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+`timescale 1ns / 1ps
+
+// Logic for player
 module player(
-	// Inputs
-	clk,
-   clk_move,
-	rst,
-	arst,
-	frame,
-	left,
-	right,
+	input clk,
+    input clk_move, // Frequency at which to move player
+	input rst,
+	input arst, // Reset buton (async reset)
+	input frame, // Signals start of blanking interval
+	input left, // Debounced left button signal
+	input right, // Debounced right button signal
 	
-	// Outputs
-	player_x,
-	player_y
+	output reg [9:0] player_x,
+	output reg [9:0] player_y
 	);
 	
 	`include "../util/constants.v"
-
-	input clk, clk_move, rst, arst, frame, left, right;
-	
-	output reg [9:0] player_x, player_y;
 	
 	reg [9:0] x_temp, y_temp;
 	
