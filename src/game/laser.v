@@ -33,13 +33,12 @@ module laser(
 			y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
 		end
 		else if (frame && laser_active) begin
-			if (y_temp == 0 || invader_collision != 0)
-				laser_active <= 0;
-			else begin
-				y_temp <= y_temp - LASER_STEP;
-				laser_x <= x_temp;
-				laser_y <= y_temp;
-			end
+			y_temp <= y_temp - LASER_STEP;
+			laser_x <= x_temp;
+			laser_y <= y_temp;
+		end
+		else if (y_temp == 0 || invader_collision != 0) begin
+			laser_active <= 0;
 		end
 	end
 

@@ -3,6 +3,7 @@
 // Logic for invaders
 module invaders(
 	input clk,
+	input clk_move,
 	input rst,
 	input arst, // Reset button (async reset)
 	input frame, // Signals start of blanking interval
@@ -21,25 +22,40 @@ module invaders(
 	
 	`include "../util/constants.v"
 	
-	reg [54:0] invaders_temp;
-	reg [9:0] x_temp, y_temp;
+	reg [54:0] temp_invaders;
+	reg [9:0] temp_x, temp_y;
+	reg direction; // 1 for right, 0 for left
 
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
-			invaders_temp <= 55'h7FFFFFFFFFFFFF;
-			x_temp <= INVADERS_START_X;
-			y_temp <= INVADERS_START_Y;
+			temp_invaders <= 55'h7FFFFFFFFFFFFF; // All invaders alive
+			temp_x <= INVADERS_START_X;
+			temp_y <= INVADERS_START_Y;
+         direction <= 0;
 		end
 		else if (frame) begin
-			invaders <= invaders_temp;
-			invaders_x <= x_temp;
-			invaders_y <= y_temp;
+         invaders <= temp_invaders;
+			invaders_x <= temp_x;
+			invaders_y <= temp_y;
 		end
 		else if (invader_collision != 0) begin
-			invaders_temp[invader_collision-1] <= 0;
+			temp_invaders[invader_collision - 1] <= 0;
 		end
-		else begin
-			// TODO: movement?
+		else if (clk_move) begin
+			// Change directions when the invaders hit the edge of the screen
+			if (temp_x == RES_H - INVADERS_WIDTH_TOT) begin
+				 direction <= 0;
+				 
+				 // Move invaders down the screen
+				 // temp_y <= temp_y + SPRITE_HEIGHT_SCALED;
+			end
+			else if (temp_x == 0)
+				 direction <= 1;
+
+			if (direction)
+				 temp_x <= temp_x + INVADERS_STEP;
+			else
+				 temp_x <= temp_x - INVADERS_STEP;
 		end
 	end
 

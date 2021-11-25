@@ -2,9 +2,6 @@
 parameter PLAYER_LIVES = 3;
 
 // VGA display 640x480 at 60Hz
-// Blanking intverals occur before active drawing area
-// Screen coordinates are signed so that the first active pixel occurs at
-// (0,0)
 parameter RES_H = 640; // Horizontal display width
 parameter SYNC_H = 96; // Horizontal sync width
 parameter FP_H = 16; // Horizontal front porch width
@@ -29,7 +26,6 @@ parameter PIXEL_FREQ = 25_000_000; // Hz
 parameter TOTAL_PIXELS = RES_V * RES_H - 1;
 
 // 8-bit colors
-// BBGGGRRR
 parameter BLACK = 8'b00000000;
 parameter WHITE = 8'b11111111;
 parameter GREEN = 8'b00111000;
@@ -50,14 +46,14 @@ parameter INVADER1 = 1;
 // Player values
 parameter PLAYER_START_X = (RES_H / 2) - (SPRITE_WIDTH_SCALED / 2);
 parameter PLAYER_START_Y = RES_V - (SPRITE_HEIGHT_SCALED);
-parameter PLAYER_STEP = 10; // at 10 Hz
+parameter PLAYER_STEP = 10;
 
 // Invader values
 parameter INVADER_PADDING = 8;
 parameter INVADERS_H = 11;
 parameter INVADERS_V = 5;
-parameter INVADERS_OFFSET_H = SPRITE_WIDTH_SCALED + INVADER_PADDING;
 parameter INVADERS_OFFSET_V = SPRITE_HEIGHT_SCALED + INVADER_PADDING;
+parameter INVADERS_OFFSET_H = SPRITE_WIDTH_SCALED + INVADER_PADDING;
 parameter INVADERS_LINE_DISP = 10;
 parameter INVADERS_WIDTH_TOT = (INVADERS_H * SPRITE_WIDTH_SCALED) 
 										+ ((INVADERS_H - 1) * INVADER_PADDING);
@@ -66,11 +62,12 @@ parameter INVADERS_HEIGHT_TOT = (INVADERS_V * SPRITE_HEIGHT_SCALED)
 parameter INVADERS_START_X = (RES_H / 2) - (INVADERS_WIDTH_TOT / 2);
 parameter INVADERS_START_Y = RES_V - SPRITE_HEIGHT_SCALED - INVADERS_HEIGHT_TOT
 										- (INVADERS_OFFSET_V * INVADERS_LINE_DISP);
+parameter INVADERS_STEP = 1;
 
 // Projectile values
 parameter PROJ_WIDTH = 1;
-parameter PROJ_HEIGHT = 4;
+parameter PROJ_HEIGHT = 2;
 parameter PROJ_WIDTH_SCALED = PROJ_WIDTH * SPRITE_SCALE;
 parameter PROJ_HEIGHT_SCALED = PROJ_HEIGHT * SPRITE_SCALE;
-parameter LASER_STEP = 1; // at 25 MHz
+parameter LASER_STEP = 1;
 parameter MISSILE_STEP = 1;

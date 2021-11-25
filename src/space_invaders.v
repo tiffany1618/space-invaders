@@ -3,15 +3,20 @@
 module space_invaders(
 	input clk,
 	input rst,
+	
+	// Buttons
 	input btn_right,
 	input btn_left,
 	input btn_shoot,
 	input btn_rst,
 	
+	// Seven segment displays
 	output [3:0] an_lives,
 	output [6:0] seg_lives,
 	output an_score,
 	output [6:0] seg_score,
+	
+	// VGA
 	output [7:0] vga_color,
 	output hsync,
 	output vsync
@@ -24,8 +29,6 @@ module space_invaders(
 	
 	// Game
 	wire shoot, left, right, arst;
-	wire [5:0] invader_collision;
-	wire player_collision;
 	wire [1:0] lives;
 	wire [6:0] score;
 	
@@ -35,7 +38,10 @@ module space_invaders(
 	// Sprites
 	wire [9:0] player_x, player_y;
 	wire [9:0] invaders_x, invaders_y;
-	wire [54:0] invaders;
+   wire [54:0] invaders;
+   wire [9:0] m1_x, m1_y, m2_x, m2_y, m3_x, m3_y;
+   wire [5:0] invader_collision;
+	wire [1:0] player_collision;
 	
 	// Projectiles
 	wire laser_active;
@@ -55,7 +61,7 @@ module space_invaders(
 		.clk_out(clk_pixel)
 	);
     
-    clk_divider _clk_10Hz (
+	clk_divider _clk_10Hz (
 		.clk,
 		.rst,
 		.freq(10),
@@ -64,7 +70,7 @@ module space_invaders(
 	
 	debouncer _debouncer (
 		.clk,
-		.clk_debouncer(clk_200Hz),
+		.clk_debouncer(clk_100Hz),
 		.rst,
 		.btn_shoot,
 		.btn_left,
@@ -78,8 +84,7 @@ module space_invaders(
 	
 	segment_displays _segment_displays (
 		.clk,
-		.clk_display(clk_200Hz),
-		.rst,
+		.clk_display(clk_100Hz),
 		.arst,
 		.lives,
 		.score,
@@ -101,10 +106,18 @@ module space_invaders(
 		.invaders,
 		.invaders_x,
 		.invaders_y,
+		.m1_x,
+		.m1_y,
+		.m2_x,
+		.m2_y,
+		.m3_x,
+		.m3_y,
 		.vga_out(vga_color),
 		.vsync,
 		.hsync,
-		.frame
+		.frame,
+		.player_collision,
+		.invader_collision
 	);
 	
 	score_logic _score_logic (
@@ -130,7 +143,7 @@ module space_invaders(
 	);
 	
 	laser _laser (
-        .clk,
+      .clk,
 		.rst,
 		.arst,
 		.frame,
@@ -141,9 +154,10 @@ module space_invaders(
 		.laser_x,
 		.laser_y
 	);
-	
+    
 	invaders _invaders (
 		.clk,
+		.clk_move(clk_100Hz),
 		.rst,
 		.arst,
 		.frame,
@@ -152,5 +166,21 @@ module space_invaders(
 		.invaders_x,
 		.invaders_y
 	);
+    
+   missiles _missiles (
+		.clk,
+		.rst,
+		.arst,
+		.frame,
+		.invaders_x,
+		.invaders_y,
+		.player_collision,
+		.m1_x,
+		.m1_y,
+		.m2_x,
+		.m2_y,
+		.m3_x,
+		.m3_y
+   );
 
 endmodule

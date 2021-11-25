@@ -28,40 +28,7 @@ module draw_sprite(
 	reg [$clog2(SPRITE_WIDTH)-1:0] x; // Horizontal position within sprite
 	reg [$clog2(SPRITE_HEIGHT)-1:0] y; // Vertical position within sprite
 	reg [$clog2(SPRITE_SCALE):0] counter_x, counter_y; // Scaling counters
-	
-	initial begin
-		/* Reading from a file didn't work for some reason
-		case (sprite)
-			PLAYER: $readmemb("../bitmaps/player.txt", memory);
-			INVADER1: $readmemb("../bitmaps/invader1.txt", memory);
-		endcase
-      */
-		
-      // Manual initialization
-		case (sprite)
-			PLAYER: begin
-				memory[0] = 13'b0000001000000;
-				memory[1] = 13'b0000011100000;
-				memory[2] = 13'b0000011100000;
-				memory[3] = 13'b0111111111110;
-				memory[4] = 13'b1111111111111;
-				memory[5] = 13'b1111111111111;
-				memory[6] = 13'b1111111111111;
-				memory[7] = 13'b1111111111111;
-			end
-			INVADER1: begin
-				memory[0] = 13'b0000011110000;
-				memory[1] = 13'b0011111111110;
-				memory[2] = 13'b0111111111111;
-				memory[3] = 13'b0111001100111;
-				memory[4] = 13'b0111111111111;
-				memory[5] = 13'b0000110011000;
-				memory[6] = 13'b0001101101100;
-				memory[7] = 13'b0110000000011;               
-			end
-		endcase
-	end
-	
+
 	always @(posedge clk or posedge rst) begin
 		if (rst) begin
 			state <= IDLE;
@@ -70,6 +37,19 @@ module draw_sprite(
 			counter_y <= 0;
 			counter_x <= 0;
 			spr_draw <= 0;
+			
+			case (sprite)
+				PLAYER: begin
+					memory[0] = 13'b0000001000000;
+					memory[1] = 13'b0000011100000;
+					memory[2] = 13'b0000011100000;
+					memory[3] = 13'b0111111111110;
+					memory[4] = 13'b1111111111111;
+					memory[5] = 13'b1111111111111;
+					memory[6] = 13'b1111111111111;
+					memory[7] = 13'b1111111111111;
+				end
+			endcase
 		end
 		else begin
 			state <= next_state;

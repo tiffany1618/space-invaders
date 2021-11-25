@@ -6,7 +6,7 @@ module score_logic(
 	input rst,
 	input arst,
 	input [5:0] invader_collision,
-	input player_collision,
+	input [1:0] player_collision,
 	
 	output reg [1:0] lives, // Current player lives
 	output reg [6:0] score // Current player score
@@ -23,7 +23,7 @@ module score_logic(
 			if (invader_collision != 0 && score < 99)
 				score <= score + 1;
 			
-			if (player_collision && lives > 0)
+			if (player_collision != 0 && lives > 0)
 				lives <= lives - 1;
 		end
 	end
