@@ -26,9 +26,9 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst) begin
-            missileStart($urandom() % 55, t1_x, t1_y);
-            missileStart($urandom() % 55, t2_x, t2_y);
-            missileStart($urandom() % 55, t3_x, t3_y);
+            missileStart($unsigned($random()) % 55, t1_x, t1_y);
+            missileStart($unsigned($random()) % 55, t2_x, t2_y);
+            missileStart($unsigned($random()) % 55, t3_x, t3_y);
         end
         else if (frame) begin
             t1_y <= t1_y + MISSILE_STEP;
@@ -46,11 +46,11 @@ module missiles(
             // Generate new missiles if they have reached the end of the 
             // screen or hit the player
             if (t1_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 1)
-                missileStart($urandom % 54, t1_x, t1_y);
+                missileStart($unsigned($random()) % 55, t1_x, t1_y);
             if (t2_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 2)
-                missileStart($urandom % 54, t2_x, t2_y);
+                missileStart($unsigned($random()) % 55, t2_x, t2_y);
             if (t3_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 3)
-                missileStart($urandom % 54, t3_x, t3_y);
+                missileStart($unsigned($random()) % 55, t3_x, t3_y);
         end
 	end
     

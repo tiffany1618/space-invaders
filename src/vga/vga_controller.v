@@ -26,7 +26,7 @@ module vga_controller(
 	output vsync, // Vertical sync
 	output frame, // Signals start of blanking interval
 	output reg [7:0] vga_out, // 8-bit color pixel
-	output reg player_collision, // 1 if player and missile collided
+	output reg [1:0] player_collision, // Non-zero if player and missile collided
 	output reg [5:0] invader_collision // Non-zero if invader and laser collided
 	);
 	
@@ -156,9 +156,18 @@ module vga_controller(
             
 			// Detect collisions
 			if (laser_draw && invader_draw != 0)
-				 invader_collision <= invader_draw * current_invader;
+				 invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
 			else
 				 invader_collision <= 0;
+				 
+			if (m1_draw && player_draw)
+				player_collision <= 1;
+			else if (m2_draw && player_draw)
+				player_collision <= 2;
+			else if (m2_draw && player_draw)
+				player_collision <= 3;
+			else 
+				player_collision <= 0;
 		end
 		else begin
 			vga_out <= 0;
