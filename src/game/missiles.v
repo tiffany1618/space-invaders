@@ -26,12 +26,12 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst) begin
-				t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
-				t1_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
-				t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
-				t2_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
-				t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
-				t3_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t1_x <= INVADERS_START_X + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t1_y <= INVADERS_START_Y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+				t2_y <= INVADERS_START_Y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+				t3_y <= INVADERS_START_Y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
         end
         else if (frame) begin
             t1_y <= t1_y + MISSILE_STEP;

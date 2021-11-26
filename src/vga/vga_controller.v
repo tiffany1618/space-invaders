@@ -85,12 +85,12 @@ module vga_controller(
 	always @(posedge clk or posedge rst or posedge arst) begin
 		if (rst || arst) begin
 			vga_out <= 0;
-            player_collision <= 0;
-            invader_collision <= 0;
-            start_player <= 0;
-            start_invaders <= 0;
-            laser_draw <= 0;
-            current_invader <= 0;
+			player_collision <= 0;
+			invader_collision <= 0;
+			start_player <= 0;
+			start_invaders <= 0;
+			laser_draw <= 0;
+			current_invader <= 0;
 		end
 		else if (data_enable) begin		
 			// Sprite drawing signals

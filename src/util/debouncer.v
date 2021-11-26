@@ -22,7 +22,7 @@ module debouncer(
     // Store three samples for each button
     reg [2:0] step_shoot, step_left, step_right, step_arst;
 
-	always @ (posedge clk) begin
+	always @ (posedge clk or posedge rst) begin
 		if (rst) begin
 			shoot <= 0;
 			left <= 0;
@@ -33,7 +33,6 @@ module debouncer(
 			step_right <= 3'b0;
 			step_arst <= 3'b0;
 		end
-
 		else if (clk_debouncer) begin
 			// Update our three samples for each button
 			step_shoot <= {btn_shoot, step_shoot[2:1]}; 

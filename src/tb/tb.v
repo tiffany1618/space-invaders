@@ -52,7 +52,9 @@ module tb;
 		rst = 0;
         
 		// Add stimulus here
-		
+		btn_shoot = 1;
+		#50000000;
+		btn_shoot = 0;
 	end
 	
 	// 100 MHz clk

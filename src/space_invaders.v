@@ -85,6 +85,7 @@ module space_invaders(
 	segment_displays _segment_displays (
 		.clk,
 		.clk_display(clk_100Hz),
+		.rst,
 		.arst,
 		.lives,
 		.score,
