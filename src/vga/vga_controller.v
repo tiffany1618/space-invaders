@@ -49,9 +49,6 @@ module vga_controller(
    reg m1_draw, m2_draw, m3_draw;
    reg invader_x, invader_y;
    reg [INVADERS_H-1:0] invader_row;
-
-	// Sprite output pixels
-	reg [7:0] player_out;
 	
 	vga_timings _vga_timings (
 		.clk,
@@ -66,7 +63,7 @@ module vga_controller(
 	
 	draw_sprite draw_player (
 		.clk,
-		.rst(arst),
+		.rst,
 		.start(start_player),
 		.sprite(PLAYER),
 		.spr_x(player_x),
@@ -76,7 +73,7 @@ module vga_controller(
     
    draw_sprite_row draw_invaders (
 		.clk,
-		.rst(arst),
+		.rst,
 		.start(start_invaders != 0),
 		.sprite(INVADER1),
 		.spr_x(invaders_x),

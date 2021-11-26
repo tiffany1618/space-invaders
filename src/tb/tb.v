@@ -48,7 +48,7 @@ module tb;
 		// Wait 100 ns for global reset to finish
 		#100;
 		rst = 1;
-		#100;
+		#1000;
 		rst = 0;
         
 		// Add stimulus here

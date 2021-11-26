@@ -123,7 +123,7 @@ module draw_sprite_row(
 			DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
-                else if (i < 11)
+                else if (i < 10)
                     next_state = AWAIT_POS;
 				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
 					next_state = NEXT_LINE;

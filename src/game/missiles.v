@@ -26,9 +26,12 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst) begin
-            missileStart($unsigned($random()) % 55, t1_x, t1_y);
-            missileStart($unsigned($random()) % 55, t2_x, t2_y);
-            missileStart($unsigned($random()) % 55, t3_x, t3_y);
+				t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+				t1_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+				t2_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+				t3_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
         end
         else if (frame) begin
             t1_y <= t1_y + MISSILE_STEP;
@@ -45,24 +48,19 @@ module missiles(
         else begin
             // Generate new missiles if they have reached the end of the 
             // screen or hit the player
-            if (t1_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 1)
-                missileStart($unsigned($random()) % 55, t1_x, t1_y);
-            if (t2_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 2)
-                missileStart($unsigned($random()) % 55, t2_x, t2_y);
-            if (t3_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 3)
-                missileStart($unsigned($random()) % 55, t3_x, t3_y);
+            if (t1_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 1) begin
+               t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+					t1_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				end
+            if (t2_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 2) begin
+					t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+					t2_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				end
+            if (t3_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 3) begin
+					t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * ($unsigned($random()) % INVADERS_H));
+					t3_y <= invaders_y + (SPRITE_HEIGHT_SCALED * (($unsigned($random()) % INVADERS_V) + 1));
+				end
         end
 	end
-    
-    task missileStart;
-        input [5:0] num;
-        output reg [9:0] x;
-        output reg [9:0] y;
-        
-        begin
-            x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (num % INVADERS_H));
-            y <= invaders_y + (SPRITE_HEIGHT_SCALED * ((num / INVADERS_H) + 1));
-        end
-    endtask
-
+     
 endmodule
