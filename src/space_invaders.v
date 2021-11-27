@@ -25,7 +25,7 @@ module space_invaders(
 	`include "util/constants.v"
 
 	// Clocks
-	wire clk_100Hz, clk_10Hz;
+	wire clk_100Hz, clk_10Hz, clk_blink;
 	
 	// Game
 	wire shoot, left, right, arst;
@@ -68,6 +68,13 @@ module space_invaders(
 		.clk_out(clk_10Hz)
 	);
 	
+	clk_divider _clk_blink (
+		.clk,
+		.rst,
+		.freq(4),
+		.clk_out(clk_blink)
+	);
+	
 	debouncer _debouncer (
 		.clk,
 		.clk_debouncer(clk_100Hz),
@@ -97,6 +104,7 @@ module space_invaders(
 	
 	vga_controller _vga_controller (
 		.clk(clk_pixel),
+		.clk_blink,
 		.rst,
 		.arst,
 		.player_x,
@@ -132,7 +140,7 @@ module space_invaders(
 	);
 	
 	player _player (
-		.clk,
+		.clk(clk_pixel),
 		.clk_move(clk_10Hz),
 		.rst,
 		.arst,
@@ -144,7 +152,7 @@ module space_invaders(
 	);
 	
 	laser _laser (
-      .clk,
+      .clk(clk_pixel),
 		.rst,
 		.arst,
 		.frame,
@@ -157,7 +165,7 @@ module space_invaders(
 	);
     
 	invaders _invaders (
-		.clk,
+		.clk(clk_pixel),
 		.clk_move(clk_100Hz),
 		.rst,
 		.arst,
@@ -169,7 +177,7 @@ module space_invaders(
 	);
     
    missiles _missiles (
-		.clk,
+		.clk(clk_pixel),
 		.rst,
 		.arst,
 		.frame,
