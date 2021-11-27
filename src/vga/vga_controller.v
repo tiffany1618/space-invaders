@@ -3,6 +3,7 @@
 // Logic for VGA controller
 module vga_controller(
 	input clk,
+	input clk_blink,
 	input rst,
 	input arst, // Reset button (async reset)
 
@@ -41,6 +42,8 @@ module vga_controller(
 	reg start_player;
    reg [INVADERS_V-1:0] start_invaders;
    reg [INVADERS_V-1:0] current_invader;
+	reg [1:0] cnt_blink;
+	reg player_blink;
 	
 	// Sprite draw signals
 	wire player_draw;
@@ -91,10 +94,11 @@ module vga_controller(
 			start_invaders <= 0;
 			laser_draw <= 0;
 			current_invader <= 0;
+			player_blink <= 0;
+			cnt_blink <= 3;
 		end
 		else if (data_enable) begin		
-			// Sprite drawing signals
-			start_player <= (x == player_x && y == player_y - 1);
+			// Projectile drawing signals
 			laser_draw <= (laser_active && x >= laser_x && x <= laser_x + PROJ_WIDTH_SCALED 
 								&& y >= laser_y && y <= laser_y + PROJ_HEIGHT_SCALED);
             
@@ -104,7 +108,30 @@ module vga_controller(
 						  && y >= m2_y && y <= m2_y + PROJ_HEIGHT_SCALED);
 			m3_draw <= (x >= m3_x && x <= m3_x + PROJ_WIDTH_SCALED
 							&& y >= m3_y && y <= m3_y + PROJ_HEIGHT_SCALED);
-                            
+			
+			// Player drawing signal
+			// Blinks 3 times when hit by missile
+			if (player_blink)
+				start_player <= 0;
+			else
+				start_player <= (x == player_x && y == player_y - 1);
+				
+			if (player_collision != 0) begin
+				player_blink <= 1;
+				cnt_blink <= 0;
+			end
+			else begin
+				if (clk_blink && cnt_blink < 3) begin
+					player_blink <= ~player_blink;
+					
+					if (player_blink)
+						cnt_blink <= cnt_blink + 1;
+				end
+				else if (cnt_blink == 3)
+					player_blink <= 0;
+			end
+         
+			// Invaders drawing signal
 			if (x == invaders_x) begin
 				 if (y == invaders_y) begin
 					  start_invaders <= 1;
