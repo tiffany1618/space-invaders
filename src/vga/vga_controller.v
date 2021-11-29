@@ -179,8 +179,10 @@ module vga_controller(
 			end
             
 			// Detect collisions
-			if (laser_draw && invader_draw != 0)
+			if (laser_draw && invader_draw != 0) begin
+				$display("%d, %d", invader_draw, current_invader);
 				 invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
+			end
 			else
 				 invader_collision <= 0;
 				 
@@ -192,9 +194,18 @@ module vga_controller(
 				player_collision <= 3;
 			else 
 				player_collision <= 0;
+			
+			// Only detect each collision once
+			if (player_collision != 0)
+				player_collision <= 0;
+			if (invader_collision != 0)
+				invader_collision <= 0;
 		end
 		else begin
 			vga_out <= 0;
+			
+			invader_collision <= 0;
+			player_collision <= 0;
 		end
 	end
 	

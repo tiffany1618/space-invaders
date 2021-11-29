@@ -61,7 +61,7 @@ module draw_sprite_row(
 			state <= next_state;
 			
 			if (state == DRAW && memory[y][x])
-				spr_draw <= i + 1;
+				spr_draw <= i;
 			else
 				spr_draw <= 0;
 			
@@ -123,8 +123,8 @@ module draw_sprite_row(
 			DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
 					next_state = DRAW;
-                else if (i < 10)
-                    next_state = AWAIT_POS;
+				else if (i < INVADERS_H)
+					 next_state = AWAIT_POS;
 				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
 					next_state = NEXT_LINE;
 				else

@@ -159,6 +159,7 @@ module space_invaders(
 		.shoot,
 		.player_x,
 		.invader_collision,
+		.invaders_x,
 		.laser_active,
 		.laser_x,
 		.laser_y

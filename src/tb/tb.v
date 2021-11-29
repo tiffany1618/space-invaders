@@ -53,7 +53,7 @@ module tb;
         
 		// Add stimulus here
 		btn_shoot = 1;
-		#50000000;
+		#500000000;
 		btn_shoot = 0;
 	end
 	
