@@ -30,10 +30,8 @@ module laser(
 		end
 		else if (shoot && ~laser_active) begin
 			laser_active <= 1;
-			x_temp <= invaders_x + INVADERS_WIDTH_TOT - (SPRITE_WIDTH_SCALED / 2);
-			y_temp <= INVADERS_START_Y + INVADERS_HEIGHT_TOT;
-			// x_temp <= player_x + (SPRITE_WIDTH_SCALED / 2) - (PROJ_WIDTH_SCALED) / 2;
-			// y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
+			x_temp <= player_x + (SPRITE_WIDTH_SCALED / 2) - (PROJ_WIDTH_SCALED) / 2;
+			y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
 		end
 		else if (frame && laser_active) begin
 			y_temp <= y_temp - LASER_STEP;

@@ -53,6 +53,10 @@ module vga_controller(
    reg invader_x, invader_y;
    reg [INVADERS_H-1:0] invader_row;
 	
+	// Internal collision signals
+	reg [1:0] m1_col, m2_col, m3_col;
+	reg [1:0] i_col;
+	
 	vga_timings _vga_timings (
 		.clk,
 		.rst,
@@ -171,41 +175,48 @@ module vga_controller(
 			else if (laser_draw || m1_draw || m2_draw || m3_draw) begin
 				vga_out <= WHITE;
 			end
-            else if (invader_draw != 0) begin
-                vga_out <= WHITE;
-            end
+			else if (invader_draw != 0) begin
+				 vga_out <= WHITE;
+			end
 			else begin
 				vga_out <= 0;
 			end
             
 			// Detect collisions
-			if (laser_draw && invader_draw != 0) begin
-				$display("%d, %d", invader_draw, current_invader);
-				 invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
-			end
+			if (laser_draw && invader_draw != 0)
+				 i_col <= i_col + 1;
 			else
-				 invader_collision <= 0;
+				i_col <= 0;
 				 
 			if (m1_draw && player_draw)
-				player_collision <= 1;
-			else if (m2_draw && player_draw)
-				player_collision <= 2;
-			else if (m2_draw && player_draw)
-				player_collision <= 3;
+				m1_col <= m1_col + 1;
+			else
+				m1_col <= 0;
+			if (m2_draw && player_draw)
+				m2_col <= m2_col + 1;
+			else m2_col <= 0;
+			if (m2_draw && player_draw)
+				m3_col <= m3_col + 1;
 			else 
-				player_collision <= 0;
-			
-			// Only detect each collision once
-			if (player_collision != 0)
-				player_collision <= 0;
-			if (invader_collision != 0)
+				m3_col <= 0;
+				
+			// Output collision signals
+			if (i_col == 1)
+				invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
+			else
 				invader_collision <= 0;
+				
+			if (m1_col == 1)
+				player_collision <= 1;
+			else if (m2_col == 1)
+				player_collision <= 2;
+			else if (m3_col == 1)
+				player_collision <= 3;
+			else
+				player_collision <= 0;
 		end
 		else begin
 			vga_out <= 0;
-			
-			invader_collision <= 0;
-			player_collision <= 0;
 		end
 	end
 	

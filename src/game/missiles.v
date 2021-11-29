@@ -27,16 +27,16 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst) begin
-				count_1 <= 0;
-				count_2 <= 6;
-				count_3 <= 10;
-			
-				t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_1 % INVADERS_H));
+				t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
 				t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
-				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_2 % INVADERS_H));
+				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 5);
 				t2_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 2;
-				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_3 % INVADERS_H));
+				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 10);
 				t3_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 3;
+				
+				count_1 <= 1;
+				count_2 <= 6;
+				count_3 <= 9;
         end
         else if (frame) begin
             t1_y <= t1_y + MISSILE_STEP;
@@ -59,7 +59,7 @@ module missiles(
 					else
 						count_1 <= count_1 + 1;
 						
-					t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_1 % INVADERS_H));
+					t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_1);
 					t1_y <= invaders_y + SPRITE_HEIGHT_SCALED;
 				end
             if (t2_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 2) begin
@@ -68,16 +68,16 @@ module missiles(
 					else
 						count_2 <= count_2 + 1;
 						
-					t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_2 % INVADERS_H));
+					t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_2);
 					t2_y <= invaders_y + SPRITE_HEIGHT_SCALED * 2;
 				end
             if (t3_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 3) begin
-					if (count_3 == 11)
-						count_3 <= 0;
+					if (count_3 == 0)
+						count_3 <= 10;
 					else
-						count_3 <= count_1 + 3;
+						count_3 <= count_3 - 1;
 						
-					t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * (count_3 % INVADERS_H));
+					t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_3);
 					t3_y <= invaders_y + SPRITE_HEIGHT_SCALED * 3;
 				end
         end
