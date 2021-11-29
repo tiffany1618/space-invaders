@@ -10,7 +10,6 @@ module laser(
 	input shoot, // Debounced shoot button signal
 	input [9:0] player_x, // Current top left horizontal player position
 	input [5:0] invader_collision,
-	input [9:0] invaders_x,
 	
     // 1 if laser should appear, 0 if not
 	output reg laser_active,
