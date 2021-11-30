@@ -23,7 +23,7 @@ module draw_sprite_row(
 	localparam IDLE = 0; // Awaiting start signal
 	localparam START = 1; // Prepare for new sprite row
 	localparam AWAIT_POS = 2; // Await horizontal position
-   localparam START_SPRITE = 3;
+   localparam START_SPRITE = 3; // Prepare to draw next sprite
 	localparam DRAW = 4; // Draw pixel
 	localparam NEXT_LINE = 5; // Prepare for next sprite line
 	
@@ -115,10 +115,14 @@ module draw_sprite_row(
 					next_state = AWAIT_POS;
 			end
 			START_SPRITE: begin
-				 if (sprites[i])
-					  next_state = DRAW;
-				 else
-					  next_state = AWAIT_POS;
+				if (sprites[i])
+					next_state = DRAW;
+				else if (i < INVADERS_H - 1)
+					next_state = AWAIT_POS;
+				else if (!(y == SPRITE_HEIGHT - 1 && counter_y == SPRITE_SCALE - 1))
+					next_state = NEXT_LINE;
+				else
+					next_state = IDLE;
 			end
 			DRAW: begin
 				if (!(x == SPRITE_WIDTH - 1 && counter_x == SPRITE_SCALE - 1))
