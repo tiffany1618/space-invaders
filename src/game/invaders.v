@@ -38,9 +38,9 @@ module invaders(
          invaders <= temp_invaders;
 			invaders_x <= temp_x;
 			invaders_y <= temp_y;
-		end
-		else if (invader_collision != 0) begin
-			temp_invaders[invader_collision - 1] <= 0;
+			
+			if (invader_collision != 0)
+				temp_invaders[invader_collision - 1] <= 0;
 		end
 		else if (clk_move) begin
 			// Change directions when the invaders hit the edge of the screen

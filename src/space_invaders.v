@@ -134,6 +134,7 @@ module space_invaders(
 		.clk(clk_pixel),
 		.rst,
 		.arst,
+		.frame,
 		.invader_collision,
 		.player_collision,
 		.lives,

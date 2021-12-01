@@ -28,10 +28,8 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst || done) begin
-				t1_x <= PLAYER_START_X + (SPRITE_WIDTH_SCALED / 2);
-				t1_y <= PLAYER_START_Y;
-				//t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
-				//t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
+				t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
+				t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
 				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 5);
 				t2_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 2;
 				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 10);
@@ -52,9 +50,8 @@ module missiles(
             m2_y <= t2_y;
             m3_x <= t3_x;
             m3_y <= t3_y;
-        end
-        else begin
-            // Generate new missiles if they have reached the end of the 
+				
+				// Generate new missiles if they have reached the end of the 
             // screen or hit the player
             if (t1_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 1) begin
 					if (count_1 == 11)

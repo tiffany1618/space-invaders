@@ -5,6 +5,7 @@ module score_logic(
 	input clk,
 	input rst,
 	input arst,
+	input frame,
 	input [5:0] invader_collision,
 	input [1:0] player_collision,
 	
@@ -21,7 +22,7 @@ module score_logic(
 			score <= 7'b0;
 			done <= 0;
 		end
-		else begin
+		else if (frame) begin
 			if (invader_collision != 0 && score < 99)
 				score <= score + 1;
 			

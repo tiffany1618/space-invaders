@@ -53,10 +53,6 @@ module vga_controller(
    reg invader_x, invader_y;
    reg [INVADERS_H-1:0] invader_row;
 	
-	// Collision counters
-	reg [1:0] m1_count, m2_count, m3_count;
-	reg [1:0] i_count;
-	
 	vga_timings _vga_timings (
 		.clk,
 		.rst,
@@ -183,54 +179,23 @@ module vga_controller(
 			end
             
 			// Detect collisions
-			// Counters to avoid registering multiple collisions during object overlap
-			if (laser_draw && invader_draw != 0) begin
-				if (i_count == 0)
-					invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
-				else 
-					invader_collision <= 0;
-				
-				i_count <= i_count + 1;
-			end
-			else begin
-				i_count <= 0;
-				invader_collision <= 0;
-			end
+			if (laser_draw && invader_draw != 0)
+				invader_collision <= invader_draw + (INVADERS_H * (current_invader - 1));
 			
-			if (m1_draw && player_draw) begin
-				if (m1_count == 0)
-					player_collision <= 1;
-				else
-					player_collision <= 0;
-					
-				m1_count <= m1_count + 1;
-			end
-			else if (m2_draw && player_draw) begin
-				if (m2_count == 0)
-					player_collision <= 2;
-				else
-					player_collision <= 0;
-					
-				m2_count <= m2_count + 1;
-			end
-			else if (m3_draw && player_draw) begin
-				if (m3_count == 0)
-					player_collision <= 3;
-				else
-					player_collision <= 0;
-					
-				m3_count <= m3_count + 1;
-			end
-			else begin
+			if (m1_draw && player_draw)
+				player_collision <= 1;
+			else if (m2_draw && player_draw)
+				player_collision <= 2;
+			else if (m3_draw && player_draw)
+				player_collision <= 3;
+		end
+		else if (frame) begin
+			// Set collision signals back to 0 for the next frame
+			if (player_collision != 0)
 				player_collision <= 0;
-			end
-			
-			if (~(m1_draw && player_draw))
-				m1_count <= 0;
-			if (~(m2_draw && player_draw))
-				m2_count <= 0;
-			if (~(m3_draw && player_draw))
-				m3_count <= 0;
+				
+			if (invader_collision != 0)
+				invader_collision <= 0;
 		end
 		else begin
 			vga_out <= 0;
