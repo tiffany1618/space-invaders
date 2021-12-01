@@ -2,7 +2,7 @@
 
 // Logic for VGA controller
 module vga_controller(
-	input clk,
+    input clk,
 	input clk_blink,
 	input rst,
 	input arst, // Reset button (async reset)

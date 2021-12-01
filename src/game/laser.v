@@ -33,15 +33,13 @@ module laser(
 			x_temp <= player_x + (SPRITE_WIDTH_SCALED / 2) - (PROJ_WIDTH_SCALED) / 2;
 			y_temp <= PLAYER_START_Y - PROJ_HEIGHT_SCALED;
 		end
-		else if (frame) begin
-			if (laser_active) begin
-				y_temp <= y_temp - LASER_STEP;
-				laser_x <= x_temp;
-				laser_y <= y_temp;
-			end
-			else if (y_temp == 0 || invader_collision != 0)
-				laser_active <= 0;
+		else if (frame && laser_active) begin
+            y_temp <= y_temp - LASER_STEP;
+            laser_x <= x_temp;
+            laser_y <= y_temp;
 		end
+        else if (y_temp == 0 || invader_collision != 0)
+			laser_active <= 0;
 	end
 
 endmodule

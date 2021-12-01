@@ -182,7 +182,7 @@ module space_invaders(
         .invaders_y
     );
     
-   missiles _missiles (
+    missiles _missiles (
         .clk,
         .rst,
         .arst,
