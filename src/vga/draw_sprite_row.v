@@ -23,7 +23,7 @@ module draw_sprite_row(
 	localparam IDLE = 0; // Awaiting start signal
 	localparam START = 1; // Prepare for new sprite row
 	localparam AWAIT_POS = 2; // Await horizontal position
-   localparam START_SPRITE = 3; // Prepare to draw next sprite
+    localparam START_SPRITE = 3; // Prepare to draw next sprite
 	localparam DRAW = 4; // Draw pixel
 	localparam NEXT_LINE = 5; // Prepare for next sprite line
 	

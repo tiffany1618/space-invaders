@@ -2,7 +2,7 @@
 
 // Divides clk signal into clk_out signal that is high for one clk cycle at the desired freq
 module clk_divider(
-	input clk, // 100 MHz
+    input clk, // 100 MHz
 	input rst, // Reset
 	input [26:0] freq, // Hz
 	
@@ -13,7 +13,7 @@ module clk_divider(
    reg [26:0] max;
     
 	always @(posedge clk) begin
-		if (rst) begin
+        if (rst) begin
 			clk_out <= 0;
 			counter <= 27'b0;
 			max <= 100_000_000 / freq - 1;

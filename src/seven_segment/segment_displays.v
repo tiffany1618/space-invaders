@@ -7,13 +7,13 @@ module segment_displays(
 	input rst,
 	input arst, // Reset button (async reset)
 	input [1:0] lives,
-   input [6:0] score,
+    input [6:0] score,
 	
-   output reg an_score, // Anode for score displays
+    output reg an_score, // Anode for score displays
 	output reg [3:0] an_lives, // Anode for lives displays
-   output reg [6:0] seg_score,  // Cathodes for score displays
+    output reg [6:0] seg_score,  // Cathodes for score displays
 	output reg [6:0] seg_lives // Cathodes for lives displays
-   );
+    );
 	 
 	reg [3:0] digit;
     reg counter;
@@ -22,7 +22,7 @@ module segment_displays(
 		if (rst || arst) begin
 			counter <= 0;
 			an_lives <= 4'b1110; // Only using 1 of 4 displays
-         an_score <= 0;
+            an_score <= 0;
 		end
 		else if (clk_display) begin
 			dig_to_seg(lives, seg_lives);

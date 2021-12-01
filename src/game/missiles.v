@@ -8,16 +8,16 @@ module missiles(
 	input arst,
 	input frame,
 	input [9:0] invaders_x,
-   input [9:0] invaders_y,
+    input [9:0] invaders_y,
 	input [1:0] player_collision,
 	input done,
 	
 	// Missile positions
 	output reg [9:0] m1_x,
 	output reg [9:0] m1_y,
-   output reg [9:0] m2_x,
+    output reg [9:0] m2_x,
 	output reg [9:0] m2_y,
-   output reg [9:0] m3_x,
+    output reg [9:0] m3_x,
 	output reg [9:0] m3_y
 	);
 	
@@ -28,16 +28,16 @@ module missiles(
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
         if (rst || arst || done) begin
-				t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
-				t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
-				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 5);
-				t2_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 2;
-				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 10);
-				t3_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 3;
-				
-				count_1 <= 1;
-				count_2 <= 6;
-				count_3 <= 9;
+            t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
+            t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
+            t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 5);
+            t2_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 2;
+            t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 10);
+            t3_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 3;
+            
+            count_1 <= 1;
+            count_2 <= 6;
+            count_3 <= 9;
         end
         else if (frame) begin
             t1_y <= t1_y + MISSILE_STEP;
@@ -54,32 +54,32 @@ module missiles(
 				// Generate new missiles if they have reached the end of the 
             // screen or hit the player
             if (t1_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 1) begin
-					if (count_1 == 11)
-						count_1 <= 0;
-					else
-						count_1 <= count_1 + 1;
-						
-					t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_1);
-					t1_y <= invaders_y + SPRITE_HEIGHT_SCALED;
-				end
+                if (count_1 == 11)
+                    count_1 <= 0;
+                else
+                    count_1 <= count_1 + 1;
+                    
+                t1_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_1);
+                t1_y <= invaders_y + SPRITE_HEIGHT_SCALED;
+			end
             if (t2_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 2) begin
-					if (count_2 == 11)
-						count_2 <= 0;
-					else
-						count_2 <= count_2 + 1;
-						
-					t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_2);
-					t2_y <= invaders_y + SPRITE_HEIGHT_SCALED * 2;
-				end
+                if (count_2 == 11)
+                    count_2 <= 0;
+                else
+                    count_2 <= count_2 + 1;
+                    
+                t2_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_2);
+                t2_y <= invaders_y + SPRITE_HEIGHT_SCALED * 2;
+            end
             if (t3_y == RES_V - PROJ_HEIGHT_SCALED || player_collision == 3) begin
-					if (count_3 == 0)
-						count_3 <= 10;
-					else
-						count_3 <= count_3 - 1;
-						
-					t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_3);
-					t3_y <= invaders_y + SPRITE_HEIGHT_SCALED * 3;
-				end
+                if (count_3 == 0)
+                    count_3 <= 10;
+                else
+                    count_3 <= count_3 - 1;
+                    
+                t3_x <= invaders_x + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * count_3);
+                t3_y <= invaders_y + SPRITE_HEIGHT_SCALED * 3;
+            end
         end
 	end
      

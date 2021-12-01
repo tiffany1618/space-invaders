@@ -7,23 +7,23 @@ module vga_controller(
 	input rst,
 	input arst, // Reset button (async reset)
 
-   // Game inputs
+    // Game inputs
 	input [9:0] player_x,
 	input [9:0] player_y,
 	input laser_active,
 	input [9:0] laser_x,
 	input [9:0] laser_y,
 	input [54:0] invaders,
-   input [9:0] invaders_x,
+    input [9:0] invaders_x,
 	input [9:0] invaders_y,
 	input [9:0] m1_x,
 	input [9:0] m1_y,
-   input [9:0] m2_x,
+    input [9:0] m2_x,
 	input [9:0] m2_y,
-   input [9:0] m3_x,
+    input [9:0] m3_x,
 	input [9:0] m3_y,
 	
-   output hsync, // Horizontal sync
+    output hsync, // Horizontal sync
 	output vsync, // Vertical sync
 	output frame, // Signals start of blanking interval
 	output reg [7:0] vga_out, // 8-bit color pixel
@@ -31,7 +31,7 @@ module vga_controller(
 	output reg [5:0] invader_collision // Non-zero if invader and laser collided
 	);
 	
-	`include "../util/constants.v"
+   `include "../util/constants.v"
 	
 	wire data_enable;
 	
@@ -40,8 +40,8 @@ module vga_controller(
 	
 	// Sprite start signals
 	reg start_player;
-   reg [INVADERS_V-1:0] start_invaders;
-   reg [INVADERS_V-1:0] current_invader;
+    reg [INVADERS_V-1:0] start_invaders;
+    reg [INVADERS_V-1:0] current_invader;
 	reg [1:0] cnt_blink;
 	reg player_blink;
 	
@@ -49,9 +49,9 @@ module vga_controller(
 	wire player_draw;
 	wire [$clog2(INVADERS_H):0] invader_draw;
 	reg laser_draw;
-   reg m1_draw, m2_draw, m3_draw;
-   reg invader_x, invader_y;
-   reg [INVADERS_H-1:0] invader_row;
+    reg m1_draw, m2_draw, m3_draw;
+    reg invader_x, invader_y;
+    reg [INVADERS_H-1:0] invader_row;
 	
 	vga_timings _vga_timings (
 		.clk,

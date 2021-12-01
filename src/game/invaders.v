@@ -9,15 +9,15 @@ module invaders(
 	input frame, // Signals start of blanking interval
 	input done,
 
-   // The number of which invader has been hit (0 if there are currently no collisions)
+    // The number of which invader has been hit (0 if there are currently no collisions)
 	input [5:0] invader_collision, 	
 
-   // Represents which invaders are currently alive
-   // 1 for alive, 0 for killed
+    // Represents which invaders are currently alive
+    // 1 for alive, 0 for killed
 	output reg [54:0] invaders,	
 
-   // Coordinates of top left corner of invaders grid
-   output reg [9:0] invaders_x,
+    // Coordinates of top left corner of invaders grid
+    output reg [9:0] invaders_x,
 	output reg [9:0] invaders_y
 	);
 	
@@ -32,10 +32,10 @@ module invaders(
 			temp_invaders <= 55'h7FFFFFFFFFFFFF; // All invaders alive
 			temp_x <= INVADERS_START_X;
 			temp_y <= INVADERS_START_Y;
-         direction <= 0;
+            direction <= 0;
 		end
 		else if (frame) begin
-         invaders <= temp_invaders;
+            invaders <= temp_invaders;
 			invaders_x <= temp_x;
 			invaders_y <= temp_y;
 			

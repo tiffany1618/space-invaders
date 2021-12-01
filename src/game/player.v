@@ -3,7 +3,7 @@
 // Logic for player
 module player(
 	input clk,
-   input clk_move, // Frequency at which to move player
+    input clk_move, // Frequency at which to move player
 	input rst,
 	input arst, // Reset buton (async reset)
 	input frame, // Signals start of blanking interval

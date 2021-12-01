@@ -17,7 +17,7 @@ module debouncer(
 	output reg left,
 	output reg right,
 	output reg arst
-   );
+    );
 
     // Store three samples for each button
     reg [2:0] step_shoot, step_left, step_right, step_arst;
