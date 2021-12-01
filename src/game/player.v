@@ -9,6 +9,7 @@ module player(
 	input frame, // Signals start of blanking interval
 	input left, // Debounced left button signal
 	input right, // Debounced right button signal
+	input done,
 	
 	output reg [9:0] player_x,
 	output reg [9:0] player_y
@@ -19,7 +20,7 @@ module player(
 	reg [9:0] x_temp, y_temp;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
-		if (rst || arst) begin
+		if (rst || arst || done) begin
 			x_temp <= PLAYER_START_X;
 			y_temp <= PLAYER_START_Y;
 		end

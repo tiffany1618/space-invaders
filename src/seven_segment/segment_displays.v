@@ -32,11 +32,11 @@ module segment_displays(
 			case(counter)
 				0: begin
 					an_score <= 0;
-					inverted_dig_to_seg(score % 10, seg_score);
+					inverted_dig_to_seg(score / 10, seg_score);
 				end
 				1: begin
 					an_score <= 1;
-					inverted_dig_to_seg(score / 10, seg_score);
+					inverted_dig_to_seg(score % 10, seg_score);
 				end
 			endcase
 		end

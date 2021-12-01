@@ -9,15 +9,17 @@ module score_logic(
 	input [1:0] player_collision,
 	
 	output reg [1:0] lives, // Current player lives
-	output reg [6:0] score // Current player score
+	output reg [6:0] score, // Current player score
+	output reg done // Signals end of game
 	);
 	
 	`include "../util/constants.v"
 
 	always @(posedge clk or posedge rst or posedge arst) begin
-		if (rst || arst) begin
+		if (rst || arst || done) begin
 			lives <= PLAYER_LIVES;
 			score <= 7'b0;
+			done <= 0;
 		end
 		else begin
 			if (invader_collision != 0 && score < 99)
@@ -25,6 +27,9 @@ module score_logic(
 			
 			if (player_collision != 0 && lives > 0)
 				lives <= lives - 1;
+				
+			if (score == 55 || lives == 0)
+				done <= 1;
 		end
 	end
 

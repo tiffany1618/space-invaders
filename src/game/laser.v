@@ -10,6 +10,7 @@ module laser(
 	input shoot, // Debounced shoot button signal
 	input [9:0] player_x, // Current top left horizontal player position
 	input [5:0] invader_collision,
+	input done,
 	
     // 1 if laser should appear, 0 if not
 	output reg laser_active,
@@ -24,7 +25,7 @@ module laser(
 	reg [9:0] x_temp, y_temp;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
-		if (rst || arst) begin
+		if (rst || arst || done) begin
 			laser_active <= 0;
 		end
 		else if (shoot && ~laser_active) begin

@@ -205,12 +205,7 @@ module vga_controller(
 					
 				m1_count <= m1_count + 1;
 			end
-			else begin
-				m1_count <= 0;
-				player_collision <= 0;
-			end
-				 
-			if (m2_draw && player_draw) begin
+			else if (m2_draw && player_draw) begin
 				if (m2_count == 0)
 					player_collision <= 2;
 				else
@@ -218,12 +213,7 @@ module vga_controller(
 					
 				m2_count <= m2_count + 1;
 			end
-			else begin
-				m2_count <= 0;
-				player_collision <= 0;
-			end
-			
-			if (m3_draw && player_draw) begin
+			else if (m3_draw && player_draw) begin
 				if (m3_count == 0)
 					player_collision <= 3;
 				else
@@ -232,9 +222,15 @@ module vga_controller(
 				m3_count <= m3_count + 1;
 			end
 			else begin
-				m3_count <= 0;
 				player_collision <= 0;
 			end
+			
+			if (~(m1_draw && player_draw))
+				m1_count <= 0;
+			if (~(m2_draw && player_draw))
+				m2_count <= 0;
+			if (~(m3_draw && player_draw))
+				m3_count <= 0;
 		end
 		else begin
 			vga_out <= 0;

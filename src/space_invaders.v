@@ -29,6 +29,7 @@ module space_invaders(
 	
 	// Game
 	wire shoot, left, right, arst;
+	wire done;
 	wire [1:0] lives;
 	wire [6:0] score;
 	
@@ -136,54 +137,59 @@ module space_invaders(
 		.invader_collision,
 		.player_collision,
 		.lives,
-		.score
+		.score,
+		.done
 	);
 	
 	player _player (
-		.clk(clk_pixel),
+		.clk,
 		.clk_move(clk_10Hz),
 		.rst,
 		.arst,
 		.frame,
 		.left,
 		.right,
+		.done,
 		.player_x,
 		.player_y
 	);
 	
 	laser _laser (
-      .clk(clk_pixel),
+      .clk,
 		.rst,
 		.arst,
 		.frame,
 		.shoot,
 		.player_x,
 		.invader_collision,
+		.done,
 		.laser_active,
 		.laser_x,
 		.laser_y
 	);
     
 	invaders _invaders (
-		.clk(clk_pixel),
+		.clk,
 		.clk_move(clk_100Hz),
 		.rst,
 		.arst,
 		.frame,
 		.invader_collision,
+		.done,
 		.invaders,
 		.invaders_x,
 		.invaders_y
 	);
     
    missiles _missiles (
-		.clk(clk_pixel),
+		.clk,
 		.rst,
 		.arst,
 		.frame,
 		.invaders_x,
 		.invaders_y,
 		.player_collision,
+		.done,
 		.m1_x,
 		.m1_y,
 		.m2_x,

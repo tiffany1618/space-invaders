@@ -10,6 +10,7 @@ module missiles(
 	input [9:0] invaders_x,
    input [9:0] invaders_y,
 	input [1:0] player_collision,
+	input done,
 	
 	// Missile positions
 	output reg [9:0] m1_x,
@@ -26,9 +27,11 @@ module missiles(
 	reg [3:0] count_1, count_2, count_3;
 	
 	always @(posedge clk or posedge rst or posedge arst) begin
-        if (rst || arst) begin
-				t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
-				t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
+        if (rst || arst || done) begin
+				t1_x <= PLAYER_START_X + (SPRITE_WIDTH_SCALED / 2);
+				t1_y <= PLAYER_START_Y;
+				//t1_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2);
+				//t1_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED;
 				t2_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 5);
 				t2_y <= INVADERS_START_Y + SPRITE_HEIGHT_SCALED * 2;
 				t3_x <= INVADERS_START_X + (SPRITE_WIDTH_SCALED / 2) + (INVADERS_OFFSET_H * 10);

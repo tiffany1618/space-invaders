@@ -7,6 +7,7 @@ module invaders(
 	input rst,
 	input arst, // Reset button (async reset)
 	input frame, // Signals start of blanking interval
+	input done,
 
    // The number of which invader has been hit (0 if there are currently no collisions)
 	input [5:0] invader_collision, 	
@@ -27,7 +28,7 @@ module invaders(
 	reg direction; // 1 for right, 0 for left
 
 	always @(posedge clk or posedge rst or posedge arst) begin
-		if (rst || arst) begin
+		if (rst || arst || done) begin
 			temp_invaders <= 55'h7FFFFFFFFFFFFF; // All invaders alive
 			temp_x <= INVADERS_START_X;
 			temp_y <= INVADERS_START_Y;
